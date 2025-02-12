@@ -7,7 +7,7 @@ It works for multiplexed samples, as long as each barcode has only been used onc
 **Example cmd:**
 bash "/home/vera/gueseer/Scripts/genoSuperscript.sh" 30 10 50 "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/data/amplicon_geno2" "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/geno2_sr/test" "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/barcode_assignment_geno2.tsv" 01 24
 
-# parseable input:
+parseable input:
 #1: min base Q
 #2: percentage that is allowed to miss the minQ (100-x)
 #3: MAPQ filter
