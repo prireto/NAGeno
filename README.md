@@ -35,18 +35,18 @@ parseable input:
 
 
 TODO for pipeline
-    • in general is it possible to make things as options w default settings?
-        ◦ genome ref (for alignment, vcf annotation etc.)
-        ◦ kmer and window size for minimap
-        ◦ max number of threads to use
-        ◦ bed file
-        ◦ basically important options for clairs-to
-    • path to tx.tsv needs to be parsed for vcf extraction - no reasonable default here
+- in general is it possible to make things as options w default settings?
+    - genome ref (for alignment, vcf annotation etc.)
+    - kmer and window size for minimap
+    - max number of threads to use
+    - bed file
+    - basically important options for clairs-to
+- path to tx.tsv needs to be parsed for vcf extraction - no reasonable default here
 
 
 
 
 Notes
-    • Pipeline needs to run in clirs-to env
-    • SnpEff needs newer Java version than we have installed
-    • SnpEff is installed in /home/vera/gueseer/App/tools/snpEff/
+- Pipeline needs to run in clirs-to env
+- SnpEff needs newer Java version than we have installed
+- SnpEff is installed in /home/vera/gueseer/App/tools/snpEff/
