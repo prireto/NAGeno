@@ -31,7 +31,7 @@ parseable input:
 9) Generate overview plots for all identified variants in defined amplicons and one table with only important columns as well as a subset of that one including only protein-coding variants using **self-written R script** (but also synonymous) => saves a plot and 2 tables
 
 
-
+###############################################################################################
 
 
 TODO for pipeline
