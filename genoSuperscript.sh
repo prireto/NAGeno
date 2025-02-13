@@ -42,6 +42,26 @@ mapfile -t SAMPLES < <(cut -f1 $ANNO)
 # same for barcodes in $BARCODES - could replace {01..24} by "${SAMPLES[@]}"
 mapfile -t BARCODES < <(cut -f2 $ANNO)
 
+# Bed file for geno seq ref
+BED="/home/vera/gueseer/Src/geno_panel_v2.1.bed"
+
+# Check if input arguments are provided for BC range, otherwise use defaults
+#if [[ -z "$7" && -z "$8" ]]; then
+#	# use pre-sets
+#	BC_START="$DEFAULT_BC_START"
+#	BC_END="$DEFAULT_BC_END"
+#	echo "No values parsed for barcode range."
+#else
+#	# use parsed values
+#	BC_START=$7
+#	BC_END=$8
+#	echo "Use parsed values for barcode range."
+#fi
+
+#create barcode array - if we do it like this this could also just be a parseable array in case it's not a consecutive list of BCs
+# BARCODES=$(eval echo {$BC_START..$BC_END})
+
+
 # sample name extension
 EXT="SQK-RBK114-24_barcode"
 
@@ -93,22 +113,6 @@ BED="/home/vera/gueseer/Src/geno_panel_v2.1.bed"
 
 CLAIR_MODEL="_ss"
 
-# Bed file for geno seq ref
-BED="/home/vera/gueseer/Src/geno_panel_v2.1.bed"
-
-# Check if input arguments are provided for BC range, otherwise use defaults
-if [[ -z "$7" && -z "$8" ]]; then
-	# use pre-sets
-	BC_START="$DEFAULT_BC_START"
-	BC_END="$DEFAULT_BC_END"
-	echo "No values parsed for barcode range."
-else
-	# use parsed values
-	BC_START=$7
-	BC_END=$8
-	echo "Use parsed values for barcode range."
-fi
-
 
 DATE=$(date +'%Y-%m-%d')
 
@@ -118,7 +122,7 @@ DATE=$(date +'%Y-%m-%d')
 ############################
 
 echo "###############################################################"
-echo "Run genotyping on data in $DIR, save in $ANALYSIS_DIR. Use barcodes $BC_START - $BC_END. Apply MAPQ filter of $MAPQ and fastq filter of $MOD. As ref use $REF, only run var calling in regions specified in $BED. Var calling model is $CLAIR_MODEL."
+echo "Run genotyping on data in $DIR, save in $ANALYSIS_DIR. Use barcodes "${BARCODES[@]}" and corresponding samples "${SAMPLES[@]}". Apply MAPQ filter of $MAPQ and fastq filter of $MOD. As ref use $REF, only run var calling in regions specified in $BED. Var calling model is $CLAIR_MODEL."
 echo "###############################################################"
 
 #############################
@@ -142,7 +146,7 @@ echo "MOD: $MOD"
 # create dir if it doesn't exist yet
 	mkdir -p "$DIR/filtered_fastq"
 
-for BC in $(eval echo {$BC_START..$BC_END}); do
+for BC in "${BARCODES[@]}"; do
 
 	FILE="$EXT$BC"
 
@@ -167,7 +171,7 @@ done
 
 echo "🎄"
 
-multiqc --force --dirs "$DIR/filtered_fastq" --outdir "$DIR/filtered_fastq"
+multiqc --force --dirs "$DIR/filtered_fastq" --outdir "$DIR/filtered_fastq" --verbose
 
 echo "multiqc performed on all filtered samples."
 
@@ -187,7 +191,7 @@ echo "############# ALIGNMENT ##############"
 touch "$DIR/filtered_bam_sr/alignment.log"
 BAM_LOG="$DIR/filtered_bam_sr/alignment.log"
 
-for BC in $(eval echo {$BC_START..$BC_END});do
+for BC in "${BARCODES[@]}";do
 
 	FILE="$EXT$BC$MOD"
 
@@ -261,7 +265,7 @@ echo "############# VAR CALLING ##############"
 # use somatic small var caller clairS TO
 # needs to be in mamba env clairs-to to work!!
 
-for BC in $(eval echo {$BC_START..$BC_END});do
+for BC in "${BARCODES[@]}";do
 	# get rerspective sample name from $ANNO
 	SAMPLE=$(awk -v bc="$BC" '$2 == bc {print $1}' "$ANNO")
 
