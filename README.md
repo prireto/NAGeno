@@ -41,6 +41,7 @@ TODO for pipeline
     - max number of threads to use
     - bed file
     - basically important options for clairs-to
+    - nanopore kit
 - path to tx.tsv needs to be parsed for vcf extraction - no reasonable default here
 
 
