@@ -1,5 +1,5 @@
 #!/bin/bash
-
+: '
 # amplicon geno bash superscript
 # needs to be in mamba env clairs-to to work!!
 
@@ -55,7 +55,7 @@ mapfile -t BARCODES < <(cut -f2 $ANNO)
 #	echo "Use parsed values for barcode range."
 #fi
 
-#create barcode array - if we do it like this this could also just be a parseable array in case it's not a consecutive list of BCs
+#create barcode array - if we do it like this this could also just be a parseable array in case its not a consecutive list of BCs
 # BARCODES=$(eval echo {$BC_START..$BC_END})
 
 
@@ -93,17 +93,10 @@ MOD="_q${QUANT}_Q${MIN_Q}"
 MOD_STRP="q${QUANT}_Q${MIN_Q}"
 
 # ref fa file - here just geno panel ref (must be samtools indexed)
-REF_GENO="/home/vera/gueseer/Src/GRCh38.p14.genome.geno-panel.fa"
-REF_WHOLE=$9 # "/home/vera/gueseer/Src/GRCh38.p14.genome.fa"
-REF_CHR="/home/vera/gueseer/Src/GRCh38.p14.genome.chr.fa"
-
-#set ref
-REF="$REF_WHOLE"
+REF=$9
 
 # Bed file for geno seq ref
-BED=${10} #"/home/vera/gueseer/Src/geno_panel_v2.1.bed"
-# seq_region bed (based on samtools coverage decision, not primer_design)
-#BED="/home/vera/gueseer/Src/geno_panel_seq_region_v1.2.bed"
+BED=${10}
 
 #for visuals
 txfile=${11}
@@ -113,7 +106,124 @@ txfile=${11}
 # ssrs is a model trained initially with synthetic samples and then real samples augmented (e.g., ont_r10_dorado_sup_5khz_ssrs), ss is a model trained from synthetic samples (e.g., ont_r10_dorado_sup_5khz_ss). The ssrs model provides better performance and fits most usage scenarios. ss model can be used when missing a cancer-type in model training is a concern. In v0.3.0, four real cancer cell-line datasets (HCC1937, HCC1954, H1437, and H2009) covering two cancer types (breast cancer, lung cancer) published by Park et al. were used for ssrs model training.
 
 CLAIR_MODEL="_ss"
+'
+####
 
+# Help message function
+display_help() {
+    echo "Usage: $0 --dir DIR --anno ANNO --ref REF --bed BED --txfile TXFILE [OPTIONS]"
+    echo
+    echo "Mandatory arguments:"
+    echo "  --dir DIR           Directory containing fastq files"
+    echo "  --anno ANNO         Sample sheet file"
+    echo "  --ref REF           Reference genome file"
+    echo "  --bed BED           BED file for reference"
+    echo "  --txfile TXFILE     File for visualization"
+    echo
+    echo "Optional arguments:"
+    echo "  --threads THREADS   Number of cores to use (default: 1)"
+    echo "  --min-q MIN_Q       Minimum base quality (default: 20)"
+    echo "  --max-u MAX_U       Percentage of bases allowed below MIN_Q (default: 5)"
+    echo "  --mapq MAPQ        Minimum mapping quality (default: 0)"
+    echo "  --analysis-dir DIR  Directory for output (default: ./analysis)"
+    echo "  --bc-start START    Start barcode index (default: 1)"
+    echo "  --bc-end END        End barcode index (default: 24)"
+    echo "  --ext EXT    Sample name extension (default: SQK-RBK114-24_barcode)"
+    echo "  --clairs-to-model CLAIR_MODEL        Clairs-to model (default: _ss)"
+    echo "  -h, --help          Show this help message and exit"
+    exit 0
+}
+
+# Check for help option
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    display_help
+fi
+
+################
+### SET VARs ###
+################
+
+# Default values
+DEFAULT_THREADS=1
+DEFAULT_MIN_Q=20
+DEFAULT_MAX_U=5
+DEFAULT_MAPQ=0
+DEFAULT_ANALYSIS_DIR="./analysis"
+DEFAULT_BC_START=1
+DEFAULT_BC_END=24
+DEFAULT_EXT="SQK-RBK114-24_barcode"
+DEFAULT_CLAIR_MODEL="_ss"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    	--threads) THREADS="$2"; shift 2;;
+        --min-q) MIN_Q="$2"; shift 2;;
+        --max-u) MAX_U="$2"; shift 2;;
+        --mapq) MAPQ="$2"; shift 2;;
+        --dir) DIR="$2"; shift 2;;
+        --analysis-dir) ANALYSIS_DIR="$2"; shift 2;;
+        --anno) ANNO="$2"; shift 2;;
+        --bc-start) BC_START="$2"; shift 2;;
+        --bc-end) BC_END="$2"; shift 2;;
+        --ref) REF="$2"; shift 2;;
+        --bed) BED="$2"; shift 2;;
+        --txfile) txfile="$2"; shift 2;;
+        --ext) EXT="$2", shift 2;;
+        --clairs-to-model) CLAIR_MODEL="$2", shift 2;;
+        *) echo "Unknown option: $1"; display_help;;
+    esac
+done
+
+# Check for mandatory arguments
+if [[ -z "$DIR" || -z "$ANNO" || -z "$REF" || -z "$BED" || -z "$txfile" ]]; then
+    echo "Error: Missing mandatory argument(s). Use --help for usage."
+    exit 1
+fi
+
+# Assign defaults if not provided
+THREADS=${THREADS:-$DEFAULT_THREADS}
+MIN_Q=${MIN_Q:-$DEFAULT_MIN_Q}
+MAX_U=${MAX_U:-$DEFAULT_MAX_U}
+MAPQ=${MAPQ:-$DEFAULT_MAPQ}
+ANALYSIS_DIR=${ANALYSIS_DIR:-$DEFAULT_ANALYSIS_DIR}
+BC_START=${BC_START:-$DEFAULT_BC_START}
+BC_END=${BC_END:-$DEFAULT_BC_END}
+EXT=${EXT:-$DEFAULT_EXT}
+CLAIR_MODEL=${CLAIR_MODEL:-$DEFAULT_CLAIR_MODEL}
+
+# Print parsed values
+echo "Using the following settings:"
+echo "  THREADS=$THREADS"
+echo "  MIN_Q=$MIN_Q"
+echo "  MAX_U=$MAX_U"
+echo "  MAPQ=$MAPQ"
+echo "  DIR=$DIR"
+echo "  ANALYSIS_DIR=$ANALYSIS_DIR"
+echo "  ANNO=$ANNO"
+echo "  BC_START=$BC_START"
+echo "  BC_END=$BC_END"
+echo "  REF=$REF"
+echo "  BED=$BED"
+echo "  TXFILE=$txfile"
+echo "  EXT=$EXT"
+echo "  CLAIR_MODEL=$CLAIR_MODEL"
+
+# get sample names from sample sheet (first col, no header) adn store in array called $SAMPLES
+mapfile -t SAMPLES < <(cut -f1 $ANNO)
+# same for barcodes in $BARCODES - could replace {01..24} by "${SAMPLES[@]}"
+mapfile -t BARCODES < <(cut -f2 $ANNO)
+
+# Calculate quantile and modifier strings
+QUANT=$((100 - MAX_U))
+MOD="_q${QUANT}_Q${MIN_Q}"
+MOD_STRP="q${QUANT}_Q${MIN_Q}"
+
+# Print barcode range
+#BARCODES=($(seq -w $BC_START $BC_END))
+#echo "Available barcode range: $BARCODES"
+## but why would you loop over these? I don't see the point of not just using the BARCODES
+####
 
 DATE=$(date +'%Y-%m-%d')
 
@@ -148,9 +258,11 @@ echo "MOD: $MOD"
 	mkdir -p "$DIR/filtered_fastq"
 
 for BC in "${BARCODES[@]}"; do
-
+	echo "${BC}"
+	echo "-----"
 	FILE="$EXT$BC"
-
+	echo "${FILE}"
+	
 	# if out file already exists skip
 	if [[ -e  "$DIR/filtered_fastq/${FILE}$MOD.fastq.gz" ]]; then
 		# skip
@@ -158,7 +270,7 @@ for BC in "${BARCODES[@]}"; do
 
 	else
 		# filter fastq
-		fastplong -i "$DIR/fastq/$FILE.fastq.gz" --qualified_quality_phred $MIN_Q --unqualified_percent_limit $MAX_U --thread 16 --out "$DIR/filtered_fastq/${FILE}$MOD.fastq.gz" --json "$DIR/filtered_fastq/fastplong.json" --html "$DIR/filtered_fastq/fastplong.html"
+		fastplong -i "$DIR/fastq/$FILE.fastq.gz" --qualified_quality_phred $MIN_Q --unqualified_percent_limit $MAX_U --thread $THREADS --out "$DIR/filtered_fastq/${FILE}$MOD.fastq.gz" --json "$DIR/filtered_fastq/fastplong.json" --html "$DIR/filtered_fastq/fastplong.html"
 
 		echo "${FILE}$MOD.fastq.gz has been created."
 	fi
@@ -211,16 +323,16 @@ for BC in "${BARCODES[@]}";do
 		#generally: increase both for longer reads, use -x map-ont for reads >1kb
 		#kmer size for breaking down reads for indexing and alignment
 		#lower window sides means less comparisons => less sensitivity for quicker results
-		minimap2 -ax sr -k19 -w10 -t '60' "$REF" "$DIR/filtered_fastq/$FILE.fastq.gz" | samtools sort -@ 60 | samtools view -hbS -@ 60 > "$DIR/filtered_bam_sr/$FILE.sorted.bam"
+		minimap2 -ax sr -k19 -w10 -t "$THREADS" "$REF" "$DIR/filtered_fastq/$FILE.fastq.gz" | samtools sort -@ "$THREADS" | samtools view -hbS -@ "$THREADS" > "$DIR/filtered_bam_sr/$FILE.sorted.bam"
 
 		#index bam files
-		samtools index -b "$DIR/filtered_bam_sr/$FILE.sorted.bam" -@ 60
+		samtools index -b "$DIR/filtered_bam_sr/$FILE.sorted.bam" -@ "$THREADS"
 
 
 		# save alignment stats in log file
 		echo "$DATE" >> "$BAM_LOG"
 		echo "$FILE" >> "$BAM_LOG"
-		samtools flagstat -O tsv -@ 60 "$DIR/filtered_bam_sr/$FILE.sorted.bam" >> "$BAM_LOG"
+		samtools flagstat -O tsv -@ "$THREADS" "$DIR/filtered_bam_sr/$FILE.sorted.bam" >> "$BAM_LOG"
 		echo "$FILE.fastq has been aligned to $REF. Stats can be found in $BAM_LOG."
 	fi
 
@@ -236,10 +348,10 @@ for BC in "${BARCODES[@]}";do
 	if [[ ! -e  "$DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" && "$MAPQ_FILTER" -eq 1 ]]; then
 		echo "Filter bams by MAPQ$MAPQ."
 
-		samtools view -b -q 50 -@ 60 "$DIR/filtered_bam_sr/$FILE.sorted.bam" > "$DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam"
+		samtools view -b -q 50 -@ "$THREADS" "$DIR/filtered_bam_sr/$FILE.sorted.bam" > "$DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam"
 
 		#index MAPQ filtered bam files
-		samtools index -b "$DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" -@ 60
+		samtools index -b "$DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" -@ "$THREADS"
 
 		echo "$FILE.sorted.bam has been filtered for MAPQ$MAPQ."
 	fi
@@ -289,7 +401,7 @@ for BC in "${BARCODES[@]}";do
 			BAM="$DIR/filtered_bam_sr/$FILE.sorted.bam"
 
 			# run somatic var calling w ClairS-TO
-			run_clairs_to  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads 60 --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
+			run_clairs_to  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
 
 
 			echo "Small somatic variant calling for $FILE is complete using the $CLAIR_MODEL model."
