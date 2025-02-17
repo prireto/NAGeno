@@ -18,12 +18,15 @@ print(paste0("Working in ", dir))
 mod = args[2]
 # mod = "_q90_Q30_MAPQ50_ss"
 
-samps = args[3:length(args)]
-# samps = "x92.1"
+txfile = args[3]
+#tx.tsv
 
+samps = args[4:length(args)]
+# samps = "x92.1"
 
 # args = c("Mel202", "Mel202_q90_Q20")
 # args = ("Mel202Filtered")
+print(txfile)
 print(samps)
 print(paste0("start: ", samps[1]))
 
@@ -79,7 +82,7 @@ for (samp in samps) {
   colnames(data)[1] = "SAMPLE"
   
   # load gene+tx file
-  tx = data.frame(read_tsv(file = "/home/vera/gueseer/Src/geno/tx.tsv", col_names = T))
+  tx = data.frame(read_tsv(file = txfile, col_names = T))
   # add col for gene
   data = cbind(rep("gene", length(data[,1])), data)
   colnames(data)[1] = "GENE"

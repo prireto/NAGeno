@@ -42,9 +42,6 @@ mapfile -t SAMPLES < <(cut -f1 $ANNO)
 # same for barcodes in $BARCODES - could replace {01..24} by "${SAMPLES[@]}"
 mapfile -t BARCODES < <(cut -f2 $ANNO)
 
-# Bed file for geno seq ref
-BED="/home/vera/gueseer/Src/geno_panel_v2.1.bed"
-
 # Check if input arguments are provided for BC range, otherwise use defaults
 #if [[ -z "$7" && -z "$8" ]]; then
 #	# use pre-sets
@@ -97,16 +94,20 @@ MOD_STRP="q${QUANT}_Q${MIN_Q}"
 
 # ref fa file - here just geno panel ref (must be samtools indexed)
 REF_GENO="/home/vera/gueseer/Src/GRCh38.p14.genome.geno-panel.fa"
-REF_WHOLE="/home/vera/gueseer/Src/GRCh38.p14.genome.fa"
+REF_WHOLE=$9 # "/home/vera/gueseer/Src/GRCh38.p14.genome.fa"
 REF_CHR="/home/vera/gueseer/Src/GRCh38.p14.genome.chr.fa"
 
 #set ref
 REF="$REF_WHOLE"
 
 # Bed file for geno seq ref
-BED="/home/vera/gueseer/Src/geno_panel_v2.1.bed"
+BED=${10} #"/home/vera/gueseer/Src/geno_panel_v2.1.bed"
 # seq_region bed (based on samtools coverage decision, not primer_design)
 #BED="/home/vera/gueseer/Src/geno_panel_seq_region_v1.2.bed"
+
+#for visuals
+txfile=${11}
+
 
 # set model used for var calling
 # ssrs is a model trained initially with synthetic samples and then real samples augmented (e.g., ont_r10_dorado_sup_5khz_ssrs), ss is a model trained from synthetic samples (e.g., ont_r10_dorado_sup_5khz_ss). The ssrs model provides better performance and fits most usage scenarios. ss model can be used when missing a cancer-type in model training is a concern. In v0.3.0, four real cancer cell-line datasets (HCC1937, HCC1954, H1437, and H2009) covering two cancer types (breast cancer, lung cancer) published by Park et al. were used for ssrs model training.
@@ -288,7 +289,7 @@ for BC in "${BARCODES[@]}";do
 			BAM="$DIR/filtered_bam_sr/$FILE.sorted.bam"
 
 			# run somatic var calling w ClairS-TO
-			/home/vera/gueseer/App/tools/ClairS-TO/run_clairs_to  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads 60 --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python "/home/vera/gueseer/App/mamba/envs/clairs-to/bin/python" --pypy "/home/vera/gueseer/App/mamba/envs/clairs-to/bin/pypy3" --samtools "/home/vera/gueseer/App/mamba/envs/clairs-to/bin/samtools" --parallel "/home/vera/gueseer/App/mamba/envs/clairs-to/bin/parallel" --longphase "/home/vera/gueseer/App/mamba/envs/clairs-to/bin/longphase" --whatshap "/home/vera/gueseer/App/mamba/envs/clairs-to/bin/whatshap" --bed_fn $BED
+			run_clairs_to  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads 60 --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
 
 
 			echo "Small somatic variant calling for $FILE is complete using the $CLAIR_MODEL model."
@@ -332,8 +333,8 @@ for SAMPLE in "${SAMPLES[@]}"; do
 		echo "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf already exists. Apparently vcf annotation has already been performed."
 	else
 		# run SnpEff to annotate vcf files
-		# vcf.gz works as input, output is uncompressed vcf
-		/home/vera/gueseer/App/mamba/envs/snpeff/bin/java -Xmx8g -jar /home/vera/gueseer/App/tools/snpEff/snpEff.jar -verbose -cancer -lof -stats "$ANALYSIS_DIR/SnpEff/snpEff_summary.html" "$SNPEFF_REF" "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.vcf.gz" > "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf"
+		# vcf.gz works as input, output is uncompressed vcf /home/vera/gueseer/App/mamba/envs/snpeff/bin/java -Xmx8g -jar /home/vera/gueseer/App/tools/snpEff/snpEff.jar
+		 java -Xmx8g -jar $(dirname $(which snpEff))/../share/snpeff-*/snpEff.jar -verbose -cancer -lof -stats "$ANALYSIS_DIR/SnpEff/snpEff_summary.html" "$SNPEFF_REF" "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.vcf.gz" > "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf"
 
 		# --canon might be interesting to only include canoncial tx
 		# --interval <file> might be interesting to use only regions specified in bed file
@@ -382,8 +383,9 @@ done
 # expand array into separate args to pass to Rscript ("${SAMPLES[@]}") - otherwise they are not properly embedded into a String array
 # Rscript needs (1) dir w a folder per sample containing the vcf files (2) $MOD$MAPQ_MOD$CLAIR_MODEL (3) all samples as String array => all in one collective String array
 #create the String array to parse to Rscript
-ARGS=("$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "${SAMPLES[@]}")
-/home/vera/eberhamn/lib/R-4.3.1/bin/Rscript "/home/vera/gueseer/Pipelines/veralab_geno_vcf/vcf_amplicon_geno_clairs-to.R" "${ARGS[@]}"
+#/home/vera/eberhamn/lib/R-4.3.1/bin/Rscript "/home/vera/gueseer/Pipelines/veralab_geno_vcf/vcf_amplicon_geno_clairs-to.R" "${ARGS[@]}"
+ARGS=("$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$txfile" "${SAMPLES[@]}")
+Rscript vcf_amplicon_geno_clairs-to.R "${ARGS[@]}"
 
 
 # can there be an arg to make this optional?
@@ -404,7 +406,7 @@ echo "A table with all the genotyping info has been created: $MOD_STRP$MAPQ_MOD$
 # add step that emits table and plot for genotyped samples 
 
 ARGS2=("$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD${CLAIR_MODEL}_vcf_collection.tsv" "$MOD_STRP")
-/home/vera/eberhamn/lib/R-4.3.1/bin/Rscript "/home/vera/gueseer/Scripts/genotyping.R" "${ARGS2[@]}"
+Rscript genotyping.R "${ARGS2[@]}"
 
 echo "Genotyping results saved in $ANALYSIS_DIR/ClairS-TO/${MOD_STRP}-genotyping_results.tsv, -genotyping_prot_coding_results.tsv and prot coding muts plotted in ${MOD_STRP}-genotyping_results.svg"
 
