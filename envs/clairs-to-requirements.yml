@@ -1,0 +1,13 @@
+name: clairs-to-only
+channels:
+  - pytorch
+  - bioconda
+  - conda-forge
+dependencies:  
+  - clair3=1.0.10=py39h46983ab_0
+  - bcftools=1.17=h3cc50cf_1
+  - einops=0.8.0=pyhd8ed1ab_0
+  - scikit-learn=1.5.2=py39h4b7350c_1
+  - scipy=1.13.1=py39haf93ffa_0
+  - tqdm=4.67.1=pyhd8ed1ab_0
+

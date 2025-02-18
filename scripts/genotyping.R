@@ -47,6 +47,7 @@ data_file = args[2]
 mod = args[3]
 # mod = "q90_Q30_MAPQ50_ss"
 
+
 data = data.frame(read_tsv(file = paste0(dir, data_file), col_names = T))
 print(data_file)
 

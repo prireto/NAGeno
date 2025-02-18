@@ -21,7 +21,9 @@ mod = args[2]
 txfile = args[3]
 #tx.tsv
 
-samps = args[4:length(args)]
+outdir = args[4]
+
+samps = args[5:length(args)]
 # samps = "x92.1"
 
 # args = c("Mel202", "Mel202_q90_Q20")
@@ -46,8 +48,13 @@ for (samp in samps) {
   SAMPLE=paste0(samp, "_", mod)
   # SAMPLE="Mel202_q90_Q20_ss"
   # load data and sep cols by TAB
-  print(paste0("hello: ", dir, SAMPLE, "/", "snv.anno.vcf_temp"))
-  data = data.frame(read_tsv(paste0(dir, SAMPLE, "/", "snv.anno.vcf_temp"), col_names=T))
+  file_path <- paste0(dir, SAMPLE, "/", "snv.anno.vcf_temp")
+  print(paste0("hello: ", file_path))
+  if (file.exists(file_path)) {
+    data = data.frame(read_tsv(file_path, col_names=T))
+  } else {
+    stop(paste("Error: File does not exist -", file_path))
+  }
   data
   
   # rename first col
@@ -124,6 +131,6 @@ for (samp in samps) {
 
 
 # save result as tsv
-print(paste0("Output saved in", dir))
-write_tsv(res, file = paste0(dir, mod, "_vcf_collection.tsv"))
+print(paste0("Output saved in", outdir))
+write_tsv(res, file = paste0(outdir, mod, "_vcf_collection.tsv"))
 
