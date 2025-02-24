@@ -51,3 +51,112 @@ Notes
 - Pipeline needs to run in clirs-to env
 - SnpEff needs newer Java version than we have installed
 - SnpEff is installed in /home/vera/gueseer/App/tools/snpEff/
+
+
+# Background
+
+Genotyping is pain and manual labor. The combination of Oxford Nanopore Technologies (ONT) Amplicon Sequencing and a structured Data Analysis Pipeline can achieve results just as good with less error-prone manual work. 
+
+# Installation and Setup
+
+Nagger can be downloaded from github via .... 
+
+`git clone prinzregententorte/...`
+
+Two .yaml files are included into the repository at envs/scripts. For the full functionality (analysis and plotting), both of them need to be created via
+
+`mamba create env -f envs/nagger.yml`
+
+`mamba create env -f nagger_plotting.yml`
+
+!!! 
+    Alternatively, `conda` can also be used for the creation of the environments, though it will be much slower than using `mamba`.
+
+# Usage
+
+Generally, `nagger` can be used with two subcommands, `analysis` and `plotting`. 
+
+```
+    ./main.sh 
+
+    Usage: ./main.sh [SUBCOMMAND] [OPTIONS]
+
+    Subcommands:
+
+    analysis             Runs genotype analysis. Use --help for mandatory and optional inputs.
+    plot                 Runs post-analysis summary and plotting functions.
+
+    Use './main.sh [SUBCOMMAND] --help' for more information on a subcommand.
+
+    Typical execution order:
+    1. Run the analysis subcommand with your parameters:
+        ./main.sh analysis [YOUR OPTIONS]
+
+    2. After completion, run the plot subcommand with the same settings:
+        ./main.sh plot [YOUR OPTIONS]
+
+```
+
+#### Analysis
+
+```
+ ./main.sh analysis --help
+
+Usage: ./main.sh analysis --dir DIR --anno ANNO --ref REF --bed BED --txfile TXFILE [OPTIONS]
+
+Mandatory arguments:
+  --dir                DIR                  Directory containing fastq files
+  --anno               ANNO                 Sample sheet file
+  --ref                REF                  Reference genome file
+  --bed                BED                  BED file for reference
+  --txfile             TXFILE               File for visualization
+
+Optional arguments:
+  --threads            THREADS              Number of cores to use (default: 1)
+  --min-q              MIN_Q                Minimum base quality (default: 20)
+  --max-u              MAX_U                Percentage of bases allowed below MIN_Q (default: 5)
+  --mapq               MAPQ                 Minimum mapping quality (default: 0)
+  --analysis-dir       DIR                  Directory for output (default: ./analysis)
+  --ext                EXT                  Sample name extension (default: SQK-RBK114-24_barcode)
+  --clairs-to-model    CLAIR_MODEL          Clairs-to model (default: _ss)
+```
+
+#### Plot
+
+```
+./main.sh plot --help
+
+Usage: ./main.sh plot --dir DIR --anno ANNO --txfile TXFILE [OPTIONS]
+
+!!! Attention !!!
+
+Make sure you are using the same options as for the analysis.
+The generated output files will otherwise not be recognized properly.
+
+Mandatory arguments:
+  --dir                DIR                  Directory containing fastq files
+  --anno               ANNO                 Sample sheet file
+  --txfile             TXFILE               File for visualization
+
+Optional arguments:
+  --min-q              MIN_Q                Minimum base quality (default: 20)
+  --max-u              MAX_U                Percentage of bases allowed below MIN_Q (default: 5)
+  --mapq               MAPQ                 Minimum mapping quality (default: 0)
+  --analysis-dir       DIR                  Directory for output (default: ./analysis)
+  --clairs-to-model    CLAIR_MODEL          Clairs-to model (default: _ss)
+
+```
+
+# Visualisation
+
+The `nagger plot` subfunction reulsts in the creation of various different visualisations for the `nagger analysis` output. This is supposed to be used as a quick and comprehensive overview about the genotypes of your samples. 
+
+#### Plot 1
+
+#### Plot 2
+
+#### Plot 3
+
+# License
+
+The project is licensed under ...
