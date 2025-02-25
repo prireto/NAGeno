@@ -110,6 +110,10 @@ res_prot_cod = subset(results, (!is.na(HGVS.p) & GQ>=10))
 res_prot_cod_plot <- res_prot_cod %>%
 complete(nesting(HGVS.p, GENE), SAMPLE_STRIPPED, fill = list(AF = 0))
 
+# to also print cds plot
+res_prot_cod_plot_cds <- res_prot_cod %>%
+  complete(nesting(HGVS.c, GENE), SAMPLE_STRIPPED, fill = list(AF = 0))
+
 
 print("#################################################################")
 print("Start plotting.")
@@ -159,6 +163,21 @@ plot3 = ggplot(res_prot_cod_plot, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMPLE
   facet_wrap(~GENE+HGVS.p, scale = "free_x")
 # plot3
 
+plot3_cds = ggplot(res_prot_cod_plot_cds, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMPLE_STRIPPED))+
+  geom_bar(stat = "identity", position = "dodge")+
+  theme_ipsum()+
+  # ggtitle("Geno1 results")+
+  geom_hline(yintercept = 0.5)+
+  ylab("Allele Frequency")+
+  xlab("Sample")+
+  scale_fill_manual(values = viridis(length(unique(res_prot_cod[,"SAMPLE_STRIPPED"]))))+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        legend.position = "none",
+        axis.title.x = element_text(hjust = 0.5, size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(hjust = 0.5, size = 14, margin = margin(r = 15)))+
+  facet_wrap(~GENE+HGVS.c, scale = "free_x", ncol = 2)
+# plot3_cds
+
 print("Save plots.")
 
 
@@ -177,6 +196,10 @@ dev.off()
 
 svglite(filename = paste0(dir, mod, "-by_mut-genotyping_results.svg"), width = 15, height = 12)
 print(plot3) # print ensures the plot is actually printed, otherwise timeout before saving
+dev.off()
+
+svglite(filename = paste0(dir, mod, "-by_mut-cds-genotyping_results.svg"), width = 15, height = 12)
+print(plot3_cds) # print ensures the plot is actually printed, otherwise timeout before saving
 dev.off()
 
 print(paste0("Output saved in", dir))
