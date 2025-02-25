@@ -70,13 +70,14 @@ for BC in "${BARCODES[@]}"; do
 
 	else
 		# filter fastq
-		fastplong -i "$DIR/$FILE.fastq.gz" \
+		fastplong --in "$DIR/$FILE.fastq.gz" \
 		--qualified_quality_phred $MIN_Q \
 		--unqualified_percent_limit $MAX_U \
 		--thread $THREADS \
 		--out "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastq.gz" \
 		--json "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.json" \
-		--html "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.html"
+		--html "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.html" \
+		--disable_adapter_trimming
 
 		echo "${FILE}$MOD.fastq.gz has been created."
 	fi
