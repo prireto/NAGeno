@@ -65,9 +65,9 @@ Nagger can be downloaded from github via ....
 
 Two .yaml files are included into the repository at envs/scripts. For the full functionality (analysis and plotting), both of them need to be created via
 
-`mamba create env -f envs/nagger.yml`
+`mamba env create -f envs/nagger.yml`
 
-`mamba create env -f nagger_plotting.yml`
+`mamba env create -f envs/nagger_plotting.yml`
 
 !!! 
     Alternatively, `conda` can also be used for the creation of the environments, though it will be much slower than using `mamba`.
@@ -160,3 +160,14 @@ The `nagger plot` subfunction reulsts in the creation of various different visua
 # License
 
 The project is licensed under ...
+
+
+NOTES:
+- currently needs to be started NanoporeAmpliconGenotyping dir to work - otherwise it doesn't find the scripts (ERROR: /tmp/tmpyzxjvtjl: line 3: ./scripts/genoSuperscript.sh: No such file or directory)
+- maybe as default out-dir create a new dir calles analysis or output in the fastq input location? (mkdir -p $dir/analysis)
+- maybe implement a stopping mechanism after an error? or only if 0 files are geenrated in a step? is that too complicated?
+
+
+ERRORS:
+- ./scripts/genoSuperscript.sh: line 207: run_clairs_to: command not found
+
