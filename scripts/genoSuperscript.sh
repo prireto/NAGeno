@@ -76,7 +76,8 @@ for BC in "${BARCODES[@]}"; do
 		--thread $THREADS \
 		--out "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastq.gz" \
 		--json "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.json" \
-		--html "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.html"
+		--html "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.html" \
+		--disable_adapter_trimming
 
 		echo "${FILE}$MOD.fastq.gz has been created."
 	fi
