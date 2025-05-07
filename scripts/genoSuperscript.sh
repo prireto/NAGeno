@@ -13,7 +13,8 @@ MAX_U="$8"
 MAPQ="$9"
 ANALYSIS_DIR="${10}"
 EXT="${11}"
-CLAIR_MODEL="${12}"
+CLAIR_PATH="${12}"
+CLAIR_MODEL="${13}"
 
 #preprocessing
 
@@ -147,23 +148,17 @@ for BC in "${BARCODES[@]}";do
 		echo "$FILE.fastq has been aligned to $REF. Stats can be found in $BAM_LOG."
 	fi
 
-	# optionally filter bam file (usually for MAPQ>50)
-	if [[ "$MAPQ" -ne 0 ]]; then
-		#set MAPQ filter var (do filtering or not)
-		MAPQ_FILTER=1
-	else
-		MAPQ_FILTER=0
-	fi
+	# optionally filter bam file 
 	# skip if out file already exists
-	if [[ ! -e  "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" && "$MAPQ_FILTER" -eq 1 ]]; then
-		echo "Filter bams by MAPQ$MAPQ."
+	if [[ ! -e  "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" ]]; then
+		echo "Filter bams by MAPQ $MAPQ."
 
-		samtools view -b -q 50 -@ "$THREADS" "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam" > "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam"
+		samtools view -b -q "$MAPQ" -@ "$THREADS" "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam" > "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam"
 
 		#index MAPQ filtered bam files
 		samtools index -b "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" -@ "$THREADS"
 
-		echo "$FILE.sorted.bam has been filtered for MAPQ$MAPQ."
+		echo "$FILE.sorted.bam has been filtered for MAPQ $MAPQ."
 	fi
 done
 
@@ -204,7 +199,7 @@ for BC in "${BARCODES[@]}";do
 			BAM="$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam"
 
 			# run somatic var calling w ClairS-TO
-			run_clairs_to  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
+			${CLAIR_PATH}  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
 
 
 			echo "Small somatic variant calling for $FILE is complete using the $CLAIR_MODEL model."
