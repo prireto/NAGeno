@@ -162,7 +162,7 @@ The `nagger plot` subfunction reulsts in the creation of various different visua
 The project is licensed under ...
 
 
-NOTES:
+# NOTES:
 - currently needs to be started NanoporeAmpliconGenotyping dir to work - otherwise it doesn't find the scripts (ERROR: /tmp/tmpyzxjvtjl: line 3: ./scripts/genoSuperscript.sh: No such file or directory)
 - maybe as default out-dir create a new dir calles analysis or output in the fastq input location? (mkdir -p $dir/analysis)
 - maybe implement a stopping mechanism after an error? or only if 0 files are geenrated in a step? is that too complicated?
@@ -173,3 +173,8 @@ ERRORS:
 - ./scripts/genoSuperscript.sh: line 207: run_clairs_to: command not found
 - how about introducing a starting step like --start-at var-calling and internal options to start at any step in the pipeline?
 
+# To do:
+
+- Add `nageno` as official name to readme
+- Change filenames correctly to `nageno`
+- Remove unused environments
