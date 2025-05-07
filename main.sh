@@ -6,6 +6,7 @@ DEFAULT_MAX_U=5
 DEFAULT_MAPQ=0
 DEFAULT_ANALYSIS_DIR="./analysis"
 DEFAULT_EXT="SQK-RBK114-24_barcode"
+DEFAULT_CLAIR_PATH="run_clairs_to"
 DEFAULT_CLAIR_MODEL="_ss"
 DEFAULT_PLOT_ONLY=0
 
@@ -74,6 +75,7 @@ display_analysis_help() {
     printf "  %-20s %-20s %s\n" "--mapq" "MAPQ" "Minimum mapping quality (default: 0)"
     printf "  %-20s %-20s %s\n" "--analysis-dir" "DIR" "Directory for output (default: ./analysis)"
     printf "  %-20s %-20s %s\n" "--ext" "EXT" "Sample name extension (default: SQK-RBK114-24_barcode)"
+    printf "  %-20s %-20s %s\n" "--clairs-to-path" "CLAIR_PATH" "Absolute path to 'run_clairs_to'. (default: run_clairs_to)"
     printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: _ss)"
     echo
     exit 0
@@ -121,6 +123,7 @@ while [[ $# -gt 0 ]]; do
         --mapq) MAPQ="$2"; shift 2;;
         --analysis-dir) ANALYSIS_DIR="$2"; shift 2;;
         --ext) EXT="$2"; shift 2;;
+        --clairs-to-path) CLAIR_PATH="$2"; shift 2;;
         --clairs-to-model) CLAIR_MODEL="$2"; shift 2;;
         --plot-only) PLOT_ONLY=1; shift;;
         *) echo "Unknown option: $1"; display_main_help;;
@@ -146,6 +149,7 @@ MAX_U=${MAX_U:-$DEFAULT_MAX_U}
 MAPQ=${MAPQ:-$DEFAULT_MAPQ}
 ANALYSIS_DIR=${ANALYSIS_DIR:-$DEFAULT_ANALYSIS_DIR}
 EXT=${EXT:-$DEFAULT_EXT}
+CLAIR_PATH=${CLAIR_PATH:-$DEFAULT_CLAIR_PATH}
 CLAIR_MODEL=${CLAIR_MODEL:-$DEFAULT_CLAIR_MODEL}
 PLOT_ONLY=${PLOT_ONLY:-$DEFAULT_PLOT_ONLY}
 
@@ -162,6 +166,7 @@ echo "  REF=$REF"
 echo "  BED=$BED"
 echo "  TXFILE=$TXFILE"
 echo "  EXT=$EXT"
+echo "  CLAIR_PATH=$CLAIR_PATH"
 echo "  CLAIR_MODEL=$CLAIR_MODEL"
 echo "  PLOT_ONLY=$PLOT_ONLY"
 
@@ -197,7 +202,7 @@ elif [[ "$SUBCOMMAND" == "analysis" ]]; then
 
     # Run the script and log output
     conda run --no-capture-output -n nagger \
-        ./scripts/genoSuperscript.sh "$DIR" "$ANNO" "$REF" "$BED" "$TXFILE" "$THREADS" "$MIN_Q" "$MAX_U" "$MAPQ" "$ANALYSIS_DIR" "$EXT" "$CLAIR_MODEL" \
+        ./scripts/genoSuperscript.sh "$DIR" "$ANNO" "$REF" "$BED" "$TXFILE" "$THREADS" "$MIN_Q" "$MAX_U" "$MAPQ" "$ANALYSIS_DIR" "$EXT" "$CLAIR_PATH" "$CLAIR_MODEL" \
         | tee "$LOG_FILE"
 
     echo "Analysis script completed! Log saved at $LOG_FILE"
