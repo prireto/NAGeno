@@ -25,12 +25,24 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
 
+# run once for pre-filtering data - if wanted, make optional
+#Rscript ./scripts/depth_analysis.R Rscript
+
+#echo "Pre-filtering per sample read depth plots saved in: $OUT_DIR/ as pre-filtering_depth.png and pre-filtering_depth.svg"
+
+# run once for post-filtering data
+Rscript ./scripts/depth_analysis.R Rscript
+
+echo "Post-filtering per sample read depth plots saved in: $OUT_DIR/ as post-filtering_depth.png and post-filtering_depth.svg"
+
+
+
 Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "${SAMPLES[@]}"
 
 echo "Genotyping info saved in: $OUT_DIR$MOD_STRP$MAPQ_MOD$CLAIR_MODEL_vcf_collection.tsv"
 
 Rscript ./scripts/genotyping.R "$OUT_DIR" "${MOD_STRP}${MAPQ_MOD}${CLAIR_MODEL}_vcf_collection.tsv" "$MOD_STRP"
 
-echo "Genotyping results saved in: $OUT_DIR/${MOD_STRP}-genotyping_results.tsv"
+echo "Genotyping results saved in: $OUT_DIR/$MOD_STRP${MAPQ_MOD}-genotyping_results.tsv"
 
 exit 0
