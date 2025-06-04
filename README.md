@@ -1,4 +1,8 @@
-# NanoporeAmpliconGenotyping
+Email: esther.guese@uk-erlangen.de
+
+INSERT OVERVIEW FIGURE HERE.
+
+# NAGeno - Nanopore Amplicon GENOtyping
 SNV and indel genotyping by Nanopore Amplicon Sequencing and subsequenct variant calling
 
 This pipeline starts with basecalled Nanopore Amplicon sequences and returns 2 overview genotyping table, a plot and more elaborate underlying files.
@@ -55,7 +59,7 @@ Notes
 
 # Background
 
-Genotyping is pain and manual labor. The combination of Oxford Nanopore Technologies (ONT) Amplicon Sequencing and a structured Data Analysis Pipeline can achieve results just as good with less error-prone manual work. 
+Genotyping by Sanger is pain and requires manual labor. The combination of Oxford Nanopore Technologies (ONT) Amplicon Sequencing and a structured Data Analysis Pipeline can achieve results just as good with less error-prone manual work. 
 
 # Installation and Setup
 
@@ -71,6 +75,49 @@ Two .yaml files are included into the repository at envs/scripts. For the full f
 
 !!! 
     Alternatively, `conda` can also be used for the creation of the environments, though it will be much slower than using `mamba`.
+
+clairS-to needs to be installed separately (in a specific environment?) as explained here https://github.com/HKU-BAL/ClairS-TO :
+
+    # create and activate an environment named clairs-to
+    # install pypy and packages in the environment
+    # for micromamba
+    micromamba create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops scipy scikit-learn python=3.9.0 -y
+    micromamba activate clairs-to
+    
+    ## for anaconda 
+    #conda create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops python=3.9.0 -y
+    #source activate clairs-to
+    
+    git clone https://github.com/HKU-BAL/ClairS-TO.git
+    cd ClairS-TO
+    
+    # make sure in clairs-to environment
+    # download pre-trained models and other resources
+    echo ${CONDA_PREFIX}
+    mkdir -p ${CONDA_PREFIX}/bin/clairs-to_models
+    mkdir -p ${CONDA_PREFIX}/bin/clairs-to_databases
+    mkdir -p ${CONDA_PREFIX}/bin/clairs-to_cna_data
+    wget http://www.bio8.cs.hku.hk/clairs-to/models/clairs-to_models.tar.gz
+    wget http://www.bio8.cs.hku.hk/clairs-to/databases/clairs-to_databases.tar.gz
+    wget http://www.bio8.cs.hku.hk/clairs-to/cna_data/reference_files.tar.gz
+    tar -zxvf clairs-to_models.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_models/
+    tar -zxvf clairs-to_databases.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_databases/
+    tar -zxvf reference_files.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_cna_data/
+    
+    #CLAIRSTO_PATH=`pwd`
+    
+    ## to enable realignment module
+    #sudo apt install g++ libboost-all-dev -y
+    #cd ${CLAIRSTO_PATH}/src/realign && g++ -std=c++14 -O1 -shared -fPIC -o realigner ssw_cpp.cpp ssw.c realigner.cpp && g++ -std=c++11 -shared -fPIC -o debruijn_graph -O3 debruijn_graph.cpp
+    
+    ## to install allele counter for verdict module
+    #sudo apt install curl zlib1g-dev libbz2-dev liblzma-dev libcurl4-openssl-dev gcc -y
+    #cd ${CLAIRSTO_PATH}/src/verdict/allele_counter && chmod +x ./setup.sh && /bin/bash ./setup.sh ${CLAIRSTO_PATH}/src/verdict/allele_counter
+    
+    #cd ${CLAIRSTO_PATH}
+    
+    ./run_clairs_to --help
+
 
 # Usage
 
@@ -156,6 +203,13 @@ The `nagger plot` subfunction reulsts in the creation of various different visua
 #### Plot 2
 
 #### Plot 3
+
+# Test Data
+Explain briefly.
+Include example plot and table to check.
+
+# Cite NAG
+BioRXive link / doi
 
 # License
 
