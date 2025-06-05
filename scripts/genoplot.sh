@@ -30,18 +30,21 @@ mkdir -p "$OUT_DIR"
 
 #echo "Pre-filtering per sample read depth plots saved in: $OUT_DIR/ as pre-filtering_depth.png and pre-filtering_depth.svg"
 
-# run once for post-filtering data
+# run for post-filtering data
 Rscript ./scripts/depth_analysis.R Rscript
 
 echo "Post-filtering per sample read depth plots saved in: $OUT_DIR/ as post-filtering_depth.png and post-filtering_depth.svg"
 
 
+# run for snp and indel individually
+Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "snv" "${SAMPLES[@]}"
+Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "indel" "${SAMPLES[@]}"
 
-Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "${SAMPLES[@]}"
 
-echo "Genotyping info saved in: $OUT_DIR$MOD_STRP$MAPQ_MOD$CLAIR_MODEL_vcf_collection.tsv"
+echo "SNV genotyping info saved in: $OUT_DIR/$MOD_STRP$MAPQ_MOD${CLAIR_MODEL}_snv_vcf_collection.tsv."
+echo "Indel genotyping info saved in: $OUT_DIR/$MOD_STRP$MAPQ_MOD${CLAIR_MODEL}_indel_vcf_collection.tsv."
 
-Rscript ./scripts/genotyping.R "$OUT_DIR" "${MOD_STRP}${MAPQ_MOD}${CLAIR_MODEL}_vcf_collection.tsv" "$MOD_STRP"
+Rscript ./scripts/genotyping.R "$OUT_DIR" "${MOD_STRP}${MAPQ_MOD}${CLAIR_MODEL}_snv_vcf_collection.tsv" "$MOD_STRP"
 
 echo "Genotyping results saved in: $OUT_DIR/$MOD_STRP${MAPQ_MOD}-genotyping_results.tsv"
 

@@ -1,8 +1,4 @@
-# visualise seqdepth
-
-# run on de4s
-
-# setwd("/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/geno1_sr-geno-ref/plots")
+# visualize seqdepth
 
 library(ggplot2)
 library(hrbrthemes)
@@ -81,12 +77,6 @@ for (samp in 1:length(bc_anno$sample)) {
 dataQ = do.call(rbind, lapply(paste0(bc_anno[, "sample"], "Q"), get))
 
 dataQ$gene="gene"
-# old mapping w bed file
-# dataQ[dataQ$contig=="chr17:76734115-76737411","gene"]="SRSF2"
-# dataQ[dataQ$contig=="chr19:3094362-3123999","gene"]="GNA11"
-# dataQ[dataQ$contig=="chr21:43092956-43107578","gene"]="U2AF1"
-# dataQ[dataQ$contig=="chr2:197389784-197435093","gene"]="SF3B1"
-# dataQ[dataQ$contig=="chr9:77716097-78031811","gene"]="GNAQ"
 
 dataQ[dataQ$contig=="chr17","gene"]="SRSF2"
 dataQ[dataQ$contig=="chr19","gene"]="GNA11"
@@ -155,55 +145,14 @@ dataQ = dataQ %>%
 
 # write_tsv(seq_ranges_np, file = "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/np_seq_ranges_geno3.tsv")
 
+#############
+### TO DO ###
+#############
 
-
-##########
-## MAPQ ##
-##########
-
-# # use for loop to iterate over all samples defined in bc_anno samplesheet
-# # maybe this should rather be a list than separate objects, would make all this get adn paste0 crap obsolete
-# for (samp in 1:length(bc_anno$sample)) {
-#   # create full file name
-#   filename = paste0(files_specifier, bc_anno[samp, "BC"], "_", bc_anno[samp, "sample"], files_mod, ".sorted.bam.MAPQ.depth.tsv")
-#   
-#   print(paste0("Load ", filename, "."))
-#   
-#   # load all bam.q.depth.tsv files and create respective df
-#   # var name is supposed to be sampleQ + add sample col
-#   assign(paste0(bc_anno[samp, "sample"], "MAPQ"), cbind(data.frame(read_tsv(file = paste0(files, filename), col_names = T)), sample = bc_anno[samp, "sample"]))
-#   
-#   
-# }
-# 
-# # cat all in one table
-# dataMAPQ = do.call(rbind, lapply(paste0(bc_anno[, "sample"], "Q"), get))
-# 
-# dataMAPQ$gene="gene"
-# dataMAPQ[dataMAPQ$contig=="chr17:76734115-76737411","gene"]="SRSF2"
-# dataMAPQ[dataMAPQ$contig=="chr19:3094362-3123999","gene"]="GNA11"
-# dataMAPQ[dataMAPQ$contig=="chr21:43092956-43107578","gene"]="U2AF1"
-# dataMAPQ[dataMAPQ$contig=="chr2:197389784-197435093","gene"]="SF3B1"
-# dataMAPQ[dataMAPQ$contig=="chr9:77716097-78031811","gene"]="GNAQ"
-# 
-# # summary(subset(mel202, gene=="GNAQ"))
-# 
-# ggplot(dataMAPQ, aes(x=position, y= depth, fill = sample))+
-#   geom_line()+
-#   theme_ipsum()+
-#   facet_wrap(~gene, scales = "free_x")
-# 
-
-
-
-
-
-##############
-#### TODO ####
-##############
- #  nothing for now
-
-
+# rm all filter q and MAPQ options
+# rm all actual gene names
+# curr_gene should be a list filled with whatever annotation we have and be iterated over
+# omit all by sample plots? or create them optionally?
 
 #############
 ### PLOTS ###
@@ -212,8 +161,6 @@ dataQ = dataQ %>%
 # choose which filter was used => change data and depth_var based on that
 filter = "q"
 # filter = "MAPQ"
-
-
 
 # check depth for each gene by sample
 curr_gene = "SF3B1"

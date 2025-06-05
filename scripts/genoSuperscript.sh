@@ -134,8 +134,6 @@ for BC in "${BARCODES[@]}";do
 		# align fastq
 		#use short-read settings (sr) and increase some subsettings like k-mer and minimizer window size
 		#generally: increase both for longer reads, use -x map-ont for reads >1kb
-		#kmer size for breaking down reads for indexing and alignment
-		#lower window sides means less comparisons => less sensitivity for quicker results
 		minimap2 -ax sr -k19 -w10 -t "$THREADS" "$REF" "$ANALYSIS_DIR/filtered_fastq/$FILE.fastq.gz" | samtools sort -@ "$THREADS" | samtools view -hbS -@ "$THREADS" > "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam"
 
 		#index bam files
@@ -261,10 +259,22 @@ done
 
 echo "############# VCF EXTRACTION ##############"
 
-# create _temp vcf files w/o headers
+# create _temp vcf files w/o headers for all annotated snv files
 for SAMPLE in "${SAMPLES[@]}"; do
 	# get respective sample name from $ANNO
 	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL/snv.anno.vcf"
+
+	# rm all lines until one starts w #CHROM
+	sed '/CHROM/,$!d' < "$ANALYSIS_DIR/ClairS-TO/$FILE" > "$ANALYSIS_DIR/ClairS-TO/${FILE}_temp"
+	echo "Created ${FILE}_temp."
+done
+
+# gunzip all indel files and create _temp vcf files w/o headers
+for SAMPLE in "${SAMPLES[@]}"; do
+	# get respective sample name from $ANNO
+	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL/indel.vcf"
+
+	gunzip "$FILE.gz"
 
 	# rm all lines until one starts w #CHROM
 	sed '/CHROM/,$!d' < "$ANALYSIS_DIR/ClairS-TO/$FILE" > "$ANALYSIS_DIR/ClairS-TO/${FILE}_temp"
