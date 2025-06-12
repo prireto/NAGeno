@@ -182,7 +182,7 @@ print("Save plots.")
 
 
 # save result as tsv
-write_tsv(results, file = paste0(dir, mod, "-genotyping_results.tsv"))
+write_tsv(results, file = paste0(dir, mod, "-SNV_genotyping_results.tsv"))
 write_tsv(res_prot_cod, file = paste0(dir, mod, "-genotyping_prot_coding_results.tsv"))
 
 # save plots
@@ -194,7 +194,7 @@ svglite(filename = paste0(dir, mod, "-skinny-genotyping_results.svg"), width = 1
 print(plot2) # print ensures the plot is actually printed, otherwise timeout before saving
 dev.off()
 
-svglite(filename = paste0(dir, mod, "-by_mut-genotyping_results.svg"), width = 15, height = 12)
+svglite(filename = paste0(dir, mod, "-by_mut-SNV_genotyping_results.svg"), width = 15, height = 12)
 print(plot3) # print ensures the plot is actually printed, otherwise timeout before saving
 dev.off()
 

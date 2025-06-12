@@ -25,7 +25,7 @@ outdir = args[4]
 # outdir = "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/geno3_sr/no_trim/ClairS-TO/MH002_q90_Q30_MAPQ50_ss/"
 
 type = args[5]
-type = "indel"
+# type = "indel"
 
 samps = args[6:length(args)]
 # samps = c("MH022", "MH037", "MH079", "MH080", "MH081", "x92.1", "OMM1.5", "Mel285", "Mel270", "M15", "MH024", "MH026", "MH032", "MH091", "MH010", "MH082", "MH028", "MH001", "MH009", "MH031", "MH027", "MH029", "MH083", "MH084")
@@ -36,7 +36,7 @@ tx = data.frame(read_tsv(file = txfile, col_names = T))
 
 # args = c("Mel202", "Mel202_q90_Q20")
 # args = ("Mel202Filtered")
-print(txfile)
+print(tx)
 print(samps)
 print(paste0("start: ", samps[1]))
 
@@ -165,6 +165,9 @@ if(type == "snv"){
     
     # delete FORMAT col
     data = data[,!colnames(data) %in% c("FORMAT")]
+    # add first col for SAMPLE
+    data = cbind(rep(SAMPLE, length(data[,1])), data)
+    colnames(data)[1] = "SAMPLE"
     res = data
     res$GQ_PASS = ifelse(res$GQ>=10, "PASS", "FAIL")
     print(res)

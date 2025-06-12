@@ -230,7 +230,7 @@ echo "############# VCF ANNOTATION ##############"
 
 #ONLY WORKS with more recent java version than globally installed one - use the one from snpeff env
 
-mkdir "$ANALYSIS_DIR/SnpEff"
+mkdir -p "$ANALYSIS_DIR/SnpEff"
 
 for SAMPLE in "${SAMPLES[@]}"; do
 	# get rerspective sample name from $ANNO
@@ -274,7 +274,7 @@ for SAMPLE in "${SAMPLES[@]}"; do
 	# get respective sample name from $ANNO
 	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL/indel.vcf"
 
-	gunzip "$FILE.gz"
+	gunzip "$ANALYSIS_DIR/ClairS-TO/$FILE.gz"
 
 	# rm all lines until one starts w #CHROM
 	sed '/CHROM/,$!d' < "$ANALYSIS_DIR/ClairS-TO/$FILE" > "$ANALYSIS_DIR/ClairS-TO/${FILE}_temp"
