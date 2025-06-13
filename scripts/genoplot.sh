@@ -25,15 +25,26 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
 
-# run once for pre-filtering data - if wanted, make optional
-#Rscript ./scripts/depth_analysis.R Rscript
-
-#echo "Pre-filtering per sample read depth plots saved in: $OUT_DIR/ as pre-filtering_depth.png and pre-filtering_depth.svg"
-
 # run for post-filtering data
 Rscript ./scripts/depth_analysis.R
 
 echo "Post-filtering per sample read depth plots saved in: $OUT_DIR/ as post-filtering_depth.png and post-filtering_depth.svg"
+
+#######################
+
+
+echo "############# BAM DEPTH PLOTTING ##############"
+echo "This might take a while."
+
+mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
+
+# run for post-filtering data
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$MUT_LIST" "$BED")
+Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
+
+echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
+
+###########################
 
 
 # run for snp and indel individually

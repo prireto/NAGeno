@@ -164,17 +164,15 @@ done
 ### BAM DEPTH CALC + AMPLICON RANGE PLOTTING ###
 ################################################
 
+echo "############# BAM DEPTH CALCULATION ##############"
+
 # use samtoolsDepth.sh
 # parse thread count
 
-#call once for pre-filtering data - if chosen, thsi requires alignment of non-filtered fqs
-#DEPTH_MOD=""
-#bash ./samtoolsDepth.sh "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
-
-#call once for post-filtering data
+#call for post-filtering data
 DEPTH_MOD="$MOD$MAPQ_MOD"
-bash ./samtoolsDepth.sh "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr/" "$EXT" "${BARCODES[@]}" "$THREADS"
 
+bash "./scripts/samtoolsDepth.sh" "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
 
 
 ###################

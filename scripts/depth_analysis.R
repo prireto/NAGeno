@@ -19,15 +19,15 @@ args <- commandArgs(trailingOnly = TRUE)
 
 files = args[1]
 print(files)
-files="/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/test_data/filtered_bam_sr/depth/"
+# files="/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/test_data/filtered_bam_sr/depth/"
 
 files_specifier = args[2]
 print(files_specifier)
-files_specifier = "SQK-RBK114-24_barcode"
+# files_specifier = "SQK-RBK114-24_barcode"
 
 files_mod = args[3]
 print(files_mod)
-files_mod = "_q90_Q30_MAPQ50"
+# files_mod = "_q90_Q30_MAPQ50"
 # files_mod = ""
 
 plot_dir = paste0(files, "plots/")
@@ -35,7 +35,7 @@ plot_dir = paste0(files, "plots/")
 # load bc annotation
 anno_dir = args[4]
 print(anno_dir)
-anno_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/test_data/anno_trial.tsv"
+# anno_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/test_data/anno_trial.tsv"
 bc_anno = data.frame(read_tsv(file = anno_dir, col_names = c("sample", "BC")))
 # Convert the 'samples' column in anno to a factor with correctly ordered levels
 bc_anno$sample = factor(bc_anno$sample, levels = bc_anno$sample[order(as.numeric(sub("S", "", bc_anno$sample)))])
@@ -45,14 +45,14 @@ head(bc_anno)
 
 mut_list_dir = args[5]
 print(mut_list_dir)
-mut_list_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/test_data/mut_list.tsv"
+# mut_list_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/test_data/mut_list.tsv"
 muts = data.frame(read_tsv(file = paste0(mut_list_dir), col_names = T))
 muts
 
 
 bed_dir = args[6]
 print(bed_dir)
-bed_dir = "/home/vera/gueseer/Src/geno_panel_v4.1.bed"
+# bed_dir = "/home/vera/gueseer/Src/geno_panel_v4.1.bed"
 bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", "gene")))
 bed
 
@@ -100,7 +100,7 @@ genes = unique(data$gene)
 # test plotting with many samples:
 
 data_test = data
-for (i in 1:10) {
+for (i in 1:25) {
   test = data
   test[test$sample == "S3", "sample"] = paste0("T", i)
   test[test$sample == "S8", "sample"] = paste0("T", i+50)
