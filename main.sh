@@ -9,6 +9,7 @@ DEFAULT_EXT="SQK-RBK114-24_barcode"
 DEFAULT_CLAIR_PATH="run_clairs_to"
 DEFAULT_CLAIR_MODEL="_ss"
 DEFAULT_PLOT_ONLY=0
+DEFAULT_MUT_LIST="NA" # I dont know if this is used correctly as NA in R now. Needs to be checked in the R script.
 
 # Help function for main script
 display_main_help() {
@@ -45,6 +46,7 @@ display_plot_help() {
     printf "  %-20s %-20s %s\n" "--dir" "DIR" "Directory containing fastq files"
     printf "  %-20s %-20s %s\n" "--anno" "ANNO" "Sample sheet file"
     printf "  %-20s %-20s %s\n" "--txfile" "TXFILE" "File for visualization"
+    printf "  %-20s %-20s %s\n" "--bed" "BED" "BED file for reference"
     echo
     echo "Optional arguments:"
     printf "  %-20s %-20s %s\n" "--min-q" "MIN_Q" "Minimum base quality (default: 20)"
@@ -52,6 +54,7 @@ display_plot_help() {
     printf "  %-20s %-20s %s\n" "--mapq" "MAPQ" "Minimum mapping quality (default: 0)"
     printf "  %-20s %-20s %s\n" "--analysis-dir" "DIR" "Directory for output (default: ./analysis)"
     printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: _ss)"
+    printf "  %-20s %-20s %s\n" "--mut-list" "MUT_LIST" "List of mutations for highlighting in depth plots (default: NA)"
     echo
     exit 0
 }
@@ -126,6 +129,7 @@ while [[ $# -gt 0 ]]; do
         --clairs-to-path) CLAIR_PATH="$2"; shift 2;;
         --clairs-to-model) CLAIR_MODEL="$2"; shift 2;;
         --plot-only) PLOT_ONLY=1; shift;;
+        --mut-list) MUT_LIST="$2"; shift 2;;
         *) echo "Unknown option: $1"; display_main_help;;
     esac
 done
@@ -152,6 +156,7 @@ EXT=${EXT:-$DEFAULT_EXT}
 CLAIR_PATH=${CLAIR_PATH:-$DEFAULT_CLAIR_PATH}
 CLAIR_MODEL=${CLAIR_MODEL:-$DEFAULT_CLAIR_MODEL}
 PLOT_ONLY=${PLOT_ONLY:-$DEFAULT_PLOT_ONLY}
+MUT_LIST=${MUT_LIST:-$DEFAULT_MUT_LIST}
 
 # Print parsed values
 echo "Using the following settings:"
@@ -169,6 +174,7 @@ echo "  EXT=$EXT"
 echo "  CLAIR_PATH=$CLAIR_PATH"
 echo "  CLAIR_MODEL=$CLAIR_MODEL"
 echo "  PLOT_ONLY=$PLOT_ONLY"
+echo "  MUT_LIST=$MUT_LIST"
 
 # Parameter preprocessing
 QUANT=$((100 - MAX_U))
@@ -190,7 +196,7 @@ if [[ "$SUBCOMMAND" == "plot" ]]; then
     
     # Run the script and log output
     conda run --no-capture-output -n nagger_plotting \
-        ./scripts/genoplot.sh "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" \
+        ./scripts/genoplot.sh "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" "$EXT" "$MUT_LIST" "$BED"\
         | tee "$LOG_FILE"
 
     echo "Plot script finished! Log saved at $LOG_FILE"

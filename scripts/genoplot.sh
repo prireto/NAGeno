@@ -8,6 +8,9 @@ CLAIR_MODEL="$5"
 MIN_Q="$6"
 MAX_U="$7"
 MAPQ="$8"
+EXT="$9"
+MUT_LIST="${10}"
+BED="${11}"
 
 #preprocessing
 mapfile -t SAMPLES < <(cut -f1 $ANNO)
@@ -16,7 +19,6 @@ QUANT=$((100 - MAX_U))
 MOD="_q${QUANT}_Q${MIN_Q}"
 MOD_STRP="q${QUANT}_Q${MIN_Q}"
 MAPQ_MOD="_MAPQ${MAPQ}"
-
 # Activate the required Conda environment
 
 #conda deactivate
@@ -26,7 +28,7 @@ OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
 
 # run for post-filtering data
-Rscript ./scripts/depth_analysis.R
+Rscript ./scripts/depth_analysis.R "$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$MUT_LIST" "$BED" "$OUT_DIR"
 
 echo "Post-filtering per sample read depth plots saved in: $OUT_DIR/ as post-filtering_depth.png and post-filtering_depth.svg"
 
