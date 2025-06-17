@@ -144,7 +144,7 @@ Optional arguments:
 #### Plot
 
 ```bash
-Usage: ./nageno plot --dir DIR --anno ANNO --txfile TXFILE [OPTIONS]
+Usage: nageno plot --dir DIR --anno ANNO --txfile TXFILE [OPTIONS]
 
 !!! Attention !!!
 
@@ -183,10 +183,13 @@ nageno analysis \
   --threads 20 
 ```
 
-Potential installation errors:
+<details>
+<summary>Potential installation errors:</summary>
 
 - `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-fodler of the `nageno` environment.
 - ...
+
+</details>
 
 
 The `nageno plot` subfunction reulsts in the creation of various different visualisations for the `nageno analysis` output. This is supposed to be used as a quick and comprehensive overview about the genotypes of your samples. 
