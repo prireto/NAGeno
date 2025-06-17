@@ -1,13 +1,16 @@
 #!/bin/bash
+
 # Default values
 DEFAULT_THREADS=1
 DEFAULT_MIN_Q=20
 DEFAULT_MAX_U=5
 DEFAULT_MAPQ=0
 DEFAULT_ANALYSIS_DIR="./analysis"
+DEFAULT_MANAGER="conda"
 DEFAULT_EXT="SQK-RBK114-24_barcode"
 DEFAULT_CLAIR_PATH="run_clairs_to"
-DEFAULT_CLAIR_MODEL="_ss"
+DEFAULT_CLAIR_MODEL="ont_r10_dorado_sup_5khz_ss"
+DEFAULT_SNPEFF_REF="GRCh38.p14"
 DEFAULT_PLOT_ONLY=0
 DEFAULT_MUT_LIST="NA" # I dont know if this is used correctly as NA in R now. Needs to be checked in the R script.
 
@@ -49,11 +52,12 @@ display_plot_help() {
     printf "  %-20s %-20s %s\n" "--bed" "BED" "BED file for reference"
     echo
     echo "Optional arguments:"
+    printf "  %-20s %-20s %s\n" "--manager" "MANAGER" "Package manager used to activate environments (default: conda)"
     printf "  %-20s %-20s %s\n" "--min-q" "MIN_Q" "Minimum base quality (default: 20)"
     printf "  %-20s %-20s %s\n" "--max-u" "MAX_U" "Percentage of bases allowed below MIN_Q (default: 5)"
     printf "  %-20s %-20s %s\n" "--mapq" "MAPQ" "Minimum mapping quality (default: 0)"
     printf "  %-20s %-20s %s\n" "--analysis-dir" "DIR" "Directory for output (default: ./analysis)"
-    printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: _ss)"
+    printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: ont_r10_dorado_sup_5khz)"
     printf "  %-20s %-20s %s\n" "--mut-list" "MUT_LIST" "List of mutations for highlighting in depth plots (default: NA)"
     echo
     exit 0
@@ -72,6 +76,7 @@ display_analysis_help() {
     printf "  %-20s %-20s %s\n" "--txfile" "TXFILE" "File for visualization"
     echo
     echo "Optional arguments:"
+    printf "  %-20s %-20s %s\n" "--manager" "MANAGER" "Package manager used to activate environments (default: conda)"
     printf "  %-20s %-20s %s\n" "--threads" "THREADS" "Number of cores to use (default: 1)"
     printf "  %-20s %-20s %s\n" "--min-q" "MIN_Q" "Minimum base quality (default: 20)"
     printf "  %-20s %-20s %s\n" "--max-u" "MAX_U" "Percentage of bases allowed below MIN_Q (default: 5)"
@@ -79,7 +84,8 @@ display_analysis_help() {
     printf "  %-20s %-20s %s\n" "--analysis-dir" "DIR" "Directory for output (default: ./analysis)"
     printf "  %-20s %-20s %s\n" "--ext" "EXT" "Sample name extension (default: SQK-RBK114-24_barcode)"
     printf "  %-20s %-20s %s\n" "--clairs-to-path" "CLAIR_PATH" "Absolute path to 'run_clairs_to'. (default: run_clairs_to)"
-    printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: _ss)"
+    printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: ont_r10_dorado_sup_5khz)"
+    printf "  %-20s %-20s %s\n" "--snpeff-ref" "SNPEFF_REF" "SNPeff reference genome (default: GRCh38.p14)"
     echo
     exit 0
 }
@@ -120,6 +126,7 @@ while [[ $# -gt 0 ]]; do
         --ref) REF="$2"; shift 2;;
         --bed) BED="$2"; shift 2;;
         --txfile) TXFILE="$2"; shift 2;;
+        --manager) MANAGER="$2"; shift 2;;
         --threads) THREADS="$2"; shift 2;;
         --min-q) MIN_Q="$2"; shift 2;;
         --max-u) MAX_U="$2"; shift 2;;
@@ -130,6 +137,7 @@ while [[ $# -gt 0 ]]; do
         --clairs-to-model) CLAIR_MODEL="$2"; shift 2;;
         --plot-only) PLOT_ONLY=1; shift;;
         --mut-list) MUT_LIST="$2"; shift 2;;
+        --snpeff-ref) SNPEFF_REF="$2"; shift 2;;
         *) echo "Unknown option: $1"; display_main_help;;
     esac
 done
@@ -147,6 +155,7 @@ if [[ "$SUBCOMMAND" == "analysis" && ( -z "$DIR" || -z "$ANNO" || -z "$REF" || -
 fi
 
 # Assign default values if not provided
+MANAGER=${MANAGER:-$DEFAULT_MANAGER}
 THREADS=${THREADS:-$DEFAULT_THREADS}
 MIN_Q=${MIN_Q:-$DEFAULT_MIN_Q}
 MAX_U=${MAX_U:-$DEFAULT_MAX_U}
@@ -157,9 +166,11 @@ CLAIR_PATH=${CLAIR_PATH:-$DEFAULT_CLAIR_PATH}
 CLAIR_MODEL=${CLAIR_MODEL:-$DEFAULT_CLAIR_MODEL}
 PLOT_ONLY=${PLOT_ONLY:-$DEFAULT_PLOT_ONLY}
 MUT_LIST=${MUT_LIST:-$DEFAULT_MUT_LIST}
+SNPEFF_REF=${SNPEFF_REF:-$DEFAULT_SNPEFF_REF}
 
 # Print parsed values
 echo "Using the following settings:"
+echo "  MANAGER=$MANAGER"
 echo "  THREADS=$THREADS"
 echo "  MIN_Q=$MIN_Q"
 echo "  MAX_U=$MAX_U"
@@ -175,6 +186,7 @@ echo "  CLAIR_PATH=$CLAIR_PATH"
 echo "  CLAIR_MODEL=$CLAIR_MODEL"
 echo "  PLOT_ONLY=$PLOT_ONLY"
 echo "  MUT_LIST=$MUT_LIST"
+echo "  SNPEFF_REF=$SNPEFF_REF"
 
 # Parameter preprocessing
 QUANT=$((100 - MAX_U))
@@ -195,7 +207,7 @@ if [[ "$SUBCOMMAND" == "plot" ]]; then
     echo "Running plot script... Logging to $LOG_FILE"
     
     # Run the script and log output
-    conda run --no-capture-output -n nagger_plotting \
+    $MANAGER run --no-capture-output -n nageno_plot \
         ./scripts/genoplot.sh "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" "$EXT" "$MUT_LIST" "$BED"\
         | tee "$LOG_FILE"
 
@@ -207,8 +219,8 @@ elif [[ "$SUBCOMMAND" == "analysis" ]]; then
     echo "Running analysis script... Logging to $LOG_FILE"
 
     # Run the script and log output
-    conda run --no-capture-output -n nagger \
-        ./scripts/genoSuperscript.sh "$DIR" "$ANNO" "$REF" "$BED" "$TXFILE" "$THREADS" "$MIN_Q" "$MAX_U" "$MAPQ" "$ANALYSIS_DIR" "$EXT" "$CLAIR_PATH" "$CLAIR_MODEL" \
+    $MANAGER run --no-capture-output -n nageno \
+        ./scripts/genoSuperscript.sh "$DIR" "$ANNO" "$REF" "$BED" "$TXFILE" "$THREADS" "$MIN_Q" "$MAX_U" "$MAPQ" "$ANALYSIS_DIR" "$EXT" "$CLAIR_PATH" "$CLAIR_MODEL" "$SNPEFF_REF" \
         | tee "$LOG_FILE"
 
     echo "Analysis script completed! Log saved at $LOG_FILE"

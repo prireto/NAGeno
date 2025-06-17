@@ -1,10 +1,11 @@
 #analyse vcf files from np_amplicon_geno
 #extract only result lines and relevant tx, also separate genotype/allele freq col into single cols
-library(readr)
-library(tidyr)
-library(dplyr)
-library(stringr)
-
+suppressPackageStartupMessages({
+    library(readr)
+    library(tidyr)
+    library(dplyr)
+    library(stringr)
+})
 
 # get SAMPLEs
 args <- commandArgs(trailingOnly = TRUE)

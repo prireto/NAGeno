@@ -15,6 +15,7 @@ ANALYSIS_DIR="${10}"
 EXT="${11}"
 CLAIR_PATH="${12}"
 CLAIR_MODEL="${13}"
+SNPEFF_REF="${14}"
 
 #preprocessing
 
@@ -205,13 +206,13 @@ for BC in "${BARCODES[@]}";do
 			echo "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL already exists. Apparently small somatic variant calling has already been performed."
 		else
 			# create out dir
-			mkdir -p "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL"
+			mkdir -p "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD_$CLAIR_MODEL"
 
 			# define respective bam file
 			BAM="$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam"
 
-			# run somatic var calling w ClairS-TO
-			${CLAIR_PATH}  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "ont_r10_dorado_sup_5khz$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
+			# run somatic var calling w ClairS-TO in sep environment
+			${CLAIR_PATH}  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
 
 
 			echo "Small somatic variant calling for $FILE is complete using the $CLAIR_MODEL model."
@@ -238,7 +239,7 @@ mkdir -p "$ANALYSIS_DIR/SnpEff"
 for SAMPLE in "${SAMPLES[@]}"; do
 	# get rerspective sample name from $ANNO
 	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL"
-	SNPEFF_REF="GRCh38.p14"
+	
 
 	# skip if out file already exists
 	if [[ -e  "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf" ]]; then

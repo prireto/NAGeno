@@ -1,14 +1,16 @@
 # genotype UM based on np data
 # plot port coding muts w GQ>=10 and export filtered cols of all data (genotyping_results.tsv) and only prot coding muts w GQ>=10 (genotyping_prot_coding_results.tsv) 
 
-library(readr)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(viridis)
-library(RColorBrewer)
-library(svglite)
-library(hrbrthemes)
+suppressPackageStartupMessages({
+    library(readr)
+    library(tidyr)
+    library(dplyr)
+    library(ggplot2)
+    library(viridis)
+    library(RColorBrewer)
+    library(svglite)
+    library(hrbrthemes)
+})
 
 ############
 
@@ -133,7 +135,6 @@ plot_pc = ggplot(res_prot_cod_plot, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMP
         axis.title.x = element_text(hjust = 0.5, size = 14, margin = margin(t = 15)),
         axis.title.y = element_text(hjust = 0.5, size = 14, margin = margin(r = 15)))+
   facet_wrap(~GENE+HGVS.p, scale = "free_x", ncol = round(sqrt(sqrt(pc_combined_counter))+1.7-(pc_sample_count/pc_snv_count)))
-plot_pc
 
 plot_cds = ggplot(results_plot, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMPLE_STRIPPED))+
   geom_bar(stat = "identity", position = "dodge")+
@@ -149,7 +150,6 @@ plot_cds = ggplot(results_plot, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMPLE_S
         axis.title.x = element_text(hjust = 0.5, size = 14, margin = margin(t = 15)),
         axis.title.y = element_text(hjust = 0.5, size = 14, margin = margin(r = 15)))+
   facet_wrap(~GENE+HGVS.c, scale = "free_x", ncol = round(sqrt(sqrt(cds_combined_counter))+1.7-(cds_sample_count/cds_snv_count)))
-plot_cds
 
 print("Save plots.")
 
