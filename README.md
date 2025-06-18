@@ -20,7 +20,9 @@ It works for multiplexed samples, as long as each barcode has only been used onc
 What is the issue?
 
 ## Workflow
--> Replace with visualisation! -> bring in a picture SHORT description
+
+-> Replace with visualisation! -> bring in a picture + SHORT description
+
 1) Filter fastq files based on quantile Q scores using **fastplong**: Set the min Q score that a min percentage of the read's bases needs to have (also creates html report) => saves new filtered fastq files
 2) Run **multiqc** on fastq files (doesn't seem to work well on the filtered fastqs) => saves multiqc data
 3) Align to ref using **minimap2** and sepcial mid-length read settings - saves alignment stats in alignment.log file => saves bam and bai files, and alignment.log
@@ -192,15 +194,22 @@ nageno analysis \
 </details>
 
 
-The `nageno plot` subfunction reulsts in the creation of various different visualisations for the `nageno analysis` output. This is supposed to be used as a quick and comprehensive overview about the genotypes of your samples. 
+The `nageno plot` subfunction reulsts in the creation of various different visualisations for the `nageno analysis` output. This is supposed to be used as a quick and comprehensive overview about the genotypes of your samples.
 
 ```bash
 nageno plot \
-\
-\
-\
-...
+  --dir tutorial/data/fastq \
+  --anno tutorial/Src/barcode_assignment.tsv \
+  --ref /path/to/ref/genome/hg38.fa \
+  --bed tutorial/Src/geno_panel_v4.1.bed \
+  --txfile ../tutorial/Src/tx.tsv \
+  --analysis-dir nageno_tutorial/analysis \ 
+  --threads 20 
 ```
+
+> [!TIP]
+> `nageno plot` needs less arguments than `nageno analysis`. Since additional arguments are ignored, the quickest way to use the plotting functionality on your results is by replacing the `analysis` with the `plot` subcommand and re-run.  
+
 #### Table 1 –
 
 #### Table 2 –

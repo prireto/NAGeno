@@ -163,4 +163,4 @@ stats_summary <- stats %>%
 
 head(stats_summary)
 
-write_tsv(stats_summary, file = paste0(plot_dir, "Summary-", files_mod, "-depth_stats.tsv"))
+write_tsv(stats_summary, file = paste0(plot_dir, "Summary", files_mod, "-depth_stats.tsv"))
