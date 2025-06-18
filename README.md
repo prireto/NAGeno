@@ -46,8 +46,8 @@ mamba env create -f envs/nageno.yml
 mamba env create -f envs/nageno_plot.yml
 ```
 
-!!! Info
-    Alternatively, `conda` can also be used for the creation of the environments, though it will be much slower than using `mamba` or `micromamba`. Since `nageno` ultimately uses the environments for some parts of the analysis, make sure that the command `conda activate nageno` works. Alternatively, make sure that you are setting `--manager` to your respective dependency manager (e.g. `micromamba`) while using the pipeline. 
+> [!NOTE]
+> Alternatively, `conda` can also be used for the creation of the environments, though it will be much slower than using `mamba` or `micromamba`. Since `nageno` ultimately uses the environments for some parts of the analysis, make sure that the command `conda activate nageno` works. Alternatively, make sure that you are setting `--manager` to your respective dependency manager (e.g. `micromamba`) while using the pipeline. 
 
 Further, the somatic variant caller, **ClairS-TO**, and its models need to be installed manually, as explained [here](https://github.com/HKU-BAL/ClairS-TO). 
 
@@ -87,8 +87,8 @@ tar -zxvf reference_files.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_cna_data/
 </details>
 
 
-!!! Warning
-    `clairs-to` searches for the models at `echo ${CONDA_PREFIX}/bin`. This unfortunately can not be changed easily and thus you need to make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-fodler of the `nageno` environment. You can prevent this extra step by activating the `nageno` environment first and then proceed with the manual `clairs-to` installation. 
+> [!WARNING]
+> `clairs-to` searches for the models at `echo ${CONDA_PREFIX}/bin`. This unfortunately can not be changed easily and thus you need to make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-fodler of the `nageno` environment. You can prevent this extra step by activating the `nageno` environment first and then proceed with the manual `clairs-to` installation. 
 
 
 ## Usage
