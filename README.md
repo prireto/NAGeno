@@ -20,18 +20,21 @@ It works for multiplexed samples, as long as each barcode has only been used onc
 What is the issue?
 
 ## Workflow
+![NAGeno_overview_high](https://github.com/user-attachments/assets/6e7c07c3-226c-4ca6-94a5-e8addb42c26c)
+
 
 -> Replace with visualisation! -> bring in a picture + SHORT description
 
-1) Filter fastq files based on quantile Q scores using **fastplong**: Set the min Q score that a min percentage of the read's bases needs to have (also creates html report) => saves new filtered fastq files
-2) Run **multiqc** on fastq files (doesn't seem to work well on the filtered fastqs) => saves multiqc data
-3) Align to ref using **minimap2** and sepcial mid-length read settings - saves alignment stats in alignment.log file => saves bam and bai files, and alignment.log
-4) Optionally filter bams based on MAPQ score using **samtools** => saves additional bam and bai files
-5) calc and plot filtered read depths over amplicons => saves bam.depth.tsv files and depth plots (svg) (for this a bedfile incl. gene names in the 4th col is needed; if several amplicons are in the same gene, make different gene names e.g. gene1_1, gene1_2)
-6) SNV and indel variant calling using **clairs-to** (detects germline and somatic mutations even without corresponding normal samples based on SNP databases and specific models) (uses pre-set model, genomic reference, bed file, min quality score and snv/indel min allele frequencies - would be nice if these could be changed as options) => saves one dir per sample and containing several stats and a vcf.gz file for SNVs and indels, respectively
-7) vcf file annotation using **SnpEff** (annotates based on genome ref, cancer tag is pre-set here, would be nice to be optional) => returns anno.vcf file
-8) Concatenate interesting parts of SNV vcfs into one vcf collection for all samples using **self-written R script** (filters columns of interest but also only the annotation that actually corresponds to one of the panel genes) (needs a tsv file containing a list of genes to filter for in col 1 and the respective transcript id in col 2, should have a col header, is called tx.tsv here) => saves vcf_collection.tsv file
-9) Generate overview plots for all identified variants in defined amplicons and one table with only important columns extracted from vcf_collection.tsv using a **self-written R script** => saves a plot and a table
+1) Filter fastq files - output: filtered fastq files
+2) Run QC - output: multiqc data (what files? XXX)
+3) Align fastq files using sepcial mid-length read settings - output: bam and bai files, and alignment.log
+4) 
+5) Optionally filter bams based on MAPQ score using **samtools** => saves additional bam and bai files
+6) calc and plot filtered read depths over amplicons => saves bam.depth.tsv files and depth plots (svg) (for this a bedfile incl. gene names in the 4th col is needed; if several amplicons are in the same gene, make different gene names e.g. gene1_1, gene1_2)
+7) SNV and indel variant calling using **clairs-to** (detects germline and somatic mutations even without corresponding normal samples based on SNP databases and specific models) (uses pre-set model, genomic reference, bed file, min quality score and snv/indel min allele frequencies - would be nice if these could be changed as options) => saves one dir per sample and containing several stats and a vcf.gz file for SNVs and indels, respectively
+8) vcf file annotation using **SnpEff** (annotates based on genome ref, cancer tag is pre-set here, would be nice to be optional) => returns anno.vcf file
+9) Concatenate interesting parts of SNV vcfs into one vcf collection for all samples using **self-written R script** (filters columns of interest but also only the annotation that actually corresponds to one of the panel genes) (needs a tsv file containing a list of genes to filter for in col 1 and the respective transcript id in col 2, should have a col header, is called tx.tsv here) => saves vcf_collection.tsv file
+10) Generate overview plots for all identified variants in defined amplicons and one table with only important columns extracted from vcf_collection.tsv using a **self-written R script** => saves a plot and a table
 
 ## Installation
 
