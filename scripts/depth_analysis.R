@@ -7,10 +7,9 @@ suppressPackageStartupMessages({
     library(Formula)
     library(ggpubr)
     library(viridis) # pretty colors
-    library(ggrepel) # better way of preventing label and text overlaps in ggplot2
     library(scales)
     library(svglite) # save plots as svgs
-    library(rlang) # for interpreting strings as symbols ( enables pasted strings to be var placeholders)
+    library(rlang) # for interpreting strings as symbols (enables pasted strings to be var placeholders)
     library(dplyr)
     library(fuzzyjoin)
 })
@@ -35,15 +34,6 @@ bc_anno = data.frame(read_tsv(file = anno_dir, col_names = c("sample", "BC")))
 # Convert the 'samples' column in anno to a factor with correctly ordered levels
 bc_anno$sample = factor(bc_anno$sample, levels = bc_anno$sample[order(as.numeric(sub("S", "", bc_anno$sample)))])
 
-mut_list_dir = args[5] # currently not used
-print(mut_list_dir)
-
-if (mut_list_dir == "NA") {
-  mut_list_dir = NULL
-} else {
-  muts = data.frame(read_tsv(file = paste0(mut_list_dir), col_names = T))
-  muts
-}
 
 bed_dir = args[6]
 print(bed_dir)
