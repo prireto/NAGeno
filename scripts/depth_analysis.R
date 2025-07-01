@@ -35,11 +35,11 @@ bc_anno = data.frame(read_tsv(file = anno_dir, col_names = c("sample", "BC")))
 bc_anno$sample = factor(bc_anno$sample, levels = bc_anno$sample[order(as.numeric(sub("S", "", bc_anno$sample)))])
 
 
-bed_dir = args[6]
+bed_dir = args[5]
 print(bed_dir)
 bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", "gene")))
 
-plot_dir = args[7]
+plot_dir = args[6]
 print(plot_dir)
 
 # if any of the input files are empty, stop execution

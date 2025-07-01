@@ -169,7 +169,11 @@ if(type == "snv"){
     # add first col for SAMPLE
     data = cbind(rep(SAMPLE, length(data[,1])), data)
     colnames(data)[1] = "SAMPLE"
-    res = data
+    # add data of one sample to overall data, if non-empty
+    if (nrow(data) > 0) {
+      res = dplyr::bind_rows(res, data)
+    }
+
     res$GQ_PASS = ifelse(res$GQ>=10, "PASS", "FAIL")
     print(res)
   }
