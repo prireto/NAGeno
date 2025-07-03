@@ -17,24 +17,19 @@ It works for multiplexed samples, as long as each barcode has only been used onc
 
 ## Introduction
 
-What is the issue?
+**Accurate genotyping made simple.**
+
+Identifying SNVs and indels is essential in molecular biology and clinical diagnostics. Sangersequencing—still teh gold-standard for its high accuracy—requires manual inspection to avoid artifacts and catch low-frequency variants. However, it often struggles in GC-rich or highly repetitive regions. NGS provides even higher accuracy with automated analysis, but is typically excessive for small to medium-scale projects and routine lab workflows.
+
+**NAGeno** - **N**anopore **A**mplicon **Geno**typing combines high accuracy with Sanger-like simplicity while ensuring scalability making genotyping both robust and effortless.
 
 ## Workflow
-![NAGeno_overview_high](https://github.com/user-attachments/assets/6e7c07c3-226c-4ca6-94a5-e8addb42c26c)
 
+A quick, accurate and scalable pipeline for SNV and indel genotyping based on nanopore amplicon sequencing. Genotypes are detected reliably even in GC-rich and repetitive regions. Amplicons can cover regions of 50 bp - 5 kb. In a fully automated workflow, we generate detailed tables for both SNVs and indels as well as an overview plot for SNVs per sample.
 
--> Replace with visualisation! -> bring in a picture + SHORT description
-
-1) Filter fastq files - output: filtered fastq files
-2) Run QC - output: multiqc data (what files? XXX)
-3) Align fastq files using sepcial mid-length read settings - output: bam and bai files, and alignment.log
-4) 
-5) Optionally filter bams based on MAPQ score using **samtools** => saves additional bam and bai files
-6) calc and plot filtered read depths over amplicons => saves bam.depth.tsv files and depth plots (svg) (for this a bedfile incl. gene names in the 4th col is needed; if several amplicons are in the same gene, make different gene names e.g. gene1_1, gene1_2)
-7) SNV and indel variant calling using **clairs-to** (detects germline and somatic mutations even without corresponding normal samples based on SNP databases and specific models) (uses pre-set model, genomic reference, bed file, min quality score and snv/indel min allele frequencies - would be nice if these could be changed as options) => saves one dir per sample and containing several stats and a vcf.gz file for SNVs and indels, respectively
-8) vcf file annotation using **SnpEff** (annotates based on genome ref, cancer tag is pre-set here, would be nice to be optional) => returns anno.vcf file
-9) Concatenate interesting parts of SNV vcfs into one vcf collection for all samples using **self-written R script** (filters columns of interest but also only the annotation that actually corresponds to one of the panel genes) (needs a tsv file containing a list of genes to filter for in col 1 and the respective transcript id in col 2, should have a col header, is called tx.tsv here) => saves vcf_collection.tsv file
-10) Generate overview plots for all identified variants in defined amplicons and one table with only important columns extracted from vcf_collection.tsv using a **self-written R script** => saves a plot and a table
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/6ef939a9-2c55-47db-b308-c4d900f81268" width="400">
+</div>
 
 ## Installation
 
@@ -231,7 +226,8 @@ BioRXive link / doi
 
 ## License
 
-The project is licensed under ...
+This project is licensed under the [Apache License 2.0](LICENSE).
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 NOTES: Outdated?
 - currently needs to be started NanoporeAmpliconGenotyping dir to work - otherwise it doesn't find the scripts (ERROR: /tmp/tmpyzxjvtjl: line 3: ./scripts/genoSuperscript.sh: No such file or directory)
