@@ -42,8 +42,9 @@ git clone https://github.com/prinzregententorte/NanoporeAmpliconGenotyping
 Two `.yaml` files are included into the repository at `envs/scripts`. For the full functionality (i.e. analysis and plotting), both of them need to be created via
 
 ```bash
-mamba env create -f envs/nageno.yml
-mamba env create -f envs/nageno_plot.yml
+mamba env create -f NanoporeAmpliconGenotyping/envs/nageno.yml
+mamba env create -f NanoporeAmpliconGenotyping/envs/nageno_plot.yml
+mamba activate nageno
 ```
 
 > [!NOTE]
@@ -55,15 +56,28 @@ Further, the somatic variant caller, **ClairS-TO**, and its models need to be in
 <summary>Condensed relevant information about the manual installation of ClairS-TO (click to expand)</summary>
 
 ```bash
+#SRP DELETE?
 # create and activate an environment named clairs-to
 # install pypy and packages in the environment
+
+# for mamba
+#mamba create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops scipy scikit-learn python=3.9.0 -y
+#mamba activate clairs-to
+
 # for micromamba
-micromamba create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops scipy scikit-learn python=3.9.0 -y
-micromamba activate clairs-to
+#micromamba create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops scipy scikit-learn python=3.9.0 -y
+#micromamba activate clairs-to
 
 ## for anaconda 
 #conda create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops python=3.9.0 -y
 #source activate clairs-to
+
+# in case of a timeout error (Download error (28) Timeout was reached) try modifying timeout settings (works like this only for mamba and conda)
+#conda config --set remote_connect_timeout_secs 30
+#conda config --set remote_read_timeout_secs 30
+
+#SRP DELETE? END
+ 
 
 git clone https://github.com/HKU-BAL/ClairS-TO.git
 cd ClairS-TO
@@ -88,7 +102,7 @@ tar -zxvf reference_files.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_cna_data/
 
 
 > [!WARNING]
-> `clairs-to` searches for the models at `echo ${CONDA_PREFIX}/bin`. This unfortunately can not be changed easily and thus you need to make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-fodler of the `nageno` environment. You can prevent this extra step by activating the `nageno` environment first and then proceed with the manual `clairs-to` installation. 
+> `clairs-to` searches for the models at `echo ${CONDA_PREFIX}/bin`. This unfortunately can not be changed easily and thus you need to make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment. You can prevent this extra step by, as described above, activating the `nageno` environment first and then proceed with the manual `clairs-to` installation. 
 
 
 ## Usage
@@ -178,8 +192,8 @@ nageno analysis \
   --anno tutorial/Src/barcode_assignment.tsv \
   --ref /path/to/ref/genome/hg38.fa \
   --bed tutorial/Src/geno_panel_v4.1.bed \
-  --txfile ../tutorial/Src/tx.tsv \
-  --analysis-dir nageno_tutorial/analysis \ 
+  --txfile tutorial/Src/tx.tsv \
+  --analysis-dir tutorial/analysis \ 
   --threads 20 
 ```
 
