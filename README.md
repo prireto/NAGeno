@@ -1,9 +1,9 @@
 
 <h3 align="center"> NAGeno - Nanopore Amplicon GENOtyping</h3>
 
-SNV and indel genotyping by Nanopore Amplicon Sequencing and subsequenct variant calling
+A comprehensive pipeline for SNV and indel genotyping on Nanopore Amplicon Sequencing data.
 
-This pipeline starts with basecalled Nanopore Amplicon sequences and returns 2 overview genotyping tables (SNV and indel), a plot and more elaborate underlying files.
+NAGeno starts with basecalled Nanopore Amplicon sequences and returns two overview genotyping tables (SNV and indel), a SNV genotype overview plot and more elaborate underlying files.
 It works for multiplexed samples, as long as each barcode has only been used once.
 
 ## Table of contents
@@ -19,13 +19,13 @@ It works for multiplexed samples, as long as each barcode has only been used onc
 
 **Accurate genotyping made simple.**
 
-Identifying SNVs and indels is essential in molecular biology and clinical diagnostics. Sangersequencing—still teh gold-standard for its high accuracy—requires manual inspection to avoid artifacts and catch low-frequency variants. However, it often struggles in GC-rich or highly repetitive regions. NGS provides even higher accuracy with automated analysis, but is typically excessive for small to medium-scale projects and routine lab workflows.
+Identifying SNVs and indels is essential in molecular biology and clinical diagnostics. Sangersequencing—still the gold-standard for its high accuracy—requires manual inspection to avoid artifacts and catch low-frequency variants. However, it often struggles in GC-rich or highly repetitive regions. NGS provides even higher accuracy with automated analysis, but is typically excessive for small to medium-scale projects and routine lab workflows.
 
-**NAGeno** - **N**anopore **A**mplicon **Geno**typing combines high accuracy with Sanger-like simplicity while ensuring scalability making genotyping both robust and effortless.
+**NAGeno** - **N**anopore **A**mplicon **Geno**typing combines high accuracy even in GC and reptitive regions with Sanger-like simplicity while ensuring scalability making genotyping both robust and effortless.
 
 ## Workflow
 
-A quick, accurate and scalable pipeline for SNV and indel genotyping based on nanopore amplicon sequencing. Genotypes are detected reliably even in GC-rich and repetitive regions. Amplicons can cover regions of 50 bp - 5 kb. In a fully automated workflow, we generate detailed tables for both SNVs and indels as well as an overview plot for SNVs per sample.
+NAGeno performs SNV and indel genotyping on fastq files of nanopore amplicon sequencing. Amplicons can cover regions of approx. 50 bp - 5 kb. In a fully automated workflow, we generate detailed tables for both SNVs and indels, along with an overview plot of SNVs per sample, by following these steps:
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/6ef939a9-2c55-47db-b308-c4d900f81268" width="400">
@@ -186,7 +186,7 @@ nageno analysis \
 <details>
 <summary>Potential installation errors:</summary>
 
-- `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-fodler of the `nageno` environment.
+- `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment.
 - ...
 
 </details>
