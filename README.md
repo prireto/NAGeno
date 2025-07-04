@@ -42,13 +42,13 @@ git clone https://github.com/prinzregententorte/NanoporeAmpliconGenotyping
 Two `.yaml` files are included into the repository at `envs/scripts`. For the full functionality (i.e. analysis and plotting), both of them need to be created via
 
 ```bash
-mamba env create -f NanoporeAmpliconGenotyping/envs/nageno.yml
-mamba env create -f NanoporeAmpliconGenotyping/envs/nageno_plot.yml
-mamba activate nageno
+conda env create -f NanoporeAmpliconGenotyping/envs/nageno.yml
+conda env create -f NanoporeAmpliconGenotyping/envs/nageno_plot.yml
+conda activate nageno
 ```
 
 > [!NOTE]
-> Alternatively, `conda` can also be used for the creation of the environments, though it will be much slower than using `mamba` or `micromamba`. Since `nageno` ultimately uses the environments for some parts of the analysis, make sure that the command `conda activate nageno` works. Alternatively, make sure that you are setting `--manager` to your respective dependency manager (e.g. `micromamba`) while using the pipeline. 
+> Alternative to `conda`, `mamba` or `micromamba` can also be used for the creation of the environments which will be much faster. Since `nageno` ultimately uses the environments for some parts of the analysis, make sure that the command `conda activate nageno` works. Alternatively, make sure that you are setting `--manager` to your respective dependency manager (e.g. `micromamba`) while using the pipeline. 
 
 Further, the somatic variant caller, **ClairS-TO**, and its models need to be installed manually, as explained [here](https://github.com/HKU-BAL/ClairS-TO). 
 
