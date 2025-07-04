@@ -184,7 +184,6 @@ Optional arguments:
   --mapq               MAPQ                 Minimum mapping quality (default: 0)
   --analysis-dir       DIR                  Directory for output (default: ./analysis)
   --clairs-to-model    CLAIR_MODEL          Clairs-to model (default: ont_r10_dorado_sup_5khz)
-  --mut-list           MUT_LIST             List of mutations for highlighting in depth plots (default: NA)
 
 ```
 
@@ -220,8 +219,8 @@ nageno plot \
   --anno tutorial/Src/barcode_assignment.tsv \
   --ref /path/to/ref/genome/hg38.fa \
   --bed tutorial/Src/geno_panel_v4.1.bed \
-  --txfile ../tutorial/Src/tx.tsv \
-  --analysis-dir nageno_tutorial/analysis \ 
+  --txfile tutorial/Src/tx.tsv \
+  --analysis-dir tutorial/analysis \ 
   --threads 20 
 ```
 
