@@ -1,4 +1,4 @@
-name: nageno_plotting
+name: nageno_plot
 channels:
   - conda-forge
   - bioconda
