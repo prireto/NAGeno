@@ -36,15 +36,15 @@ echo "Post-filtering per sample read depth plots saved in: $OUT_DIR as post-filt
 
 
 #echo "############# BAM DEPTH PLOTTING ##############"
-#echo "This might take a while."
+echo "This might take a while."
 
-#mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
+mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
 
 # run for post-filtering data
-#ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$MUT_LIST" "$BED")
-#Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$MUT_LIST" "$BED")
+Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
-#echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
+echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
 
 ###########################
 
