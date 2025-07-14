@@ -154,8 +154,8 @@ plot_cds = ggplot(results_plot, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMPLE_S
 print("Save plots.")
 
 # save result as tsv
-# write_tsv(data, file = paste0(dir, mod, "-SNV_genotyping_results.tsv"))
-# write_tsv(res_prot_cod, file = paste0(dir, mod, "-prot_coding_SNV_genotyping_results.tsv"))
+write_tsv(data, file = paste0(dir, mod, "-SNV_genotyping_results.tsv"))
+write_tsv(res_prot_cod, file = paste0(dir, mod, "-prot_coding_SNV_genotyping_results.tsv"))
 
 # save plots
 svglite(filename = paste0(dir, mod, "-prot_coding_SNV_genotyping_results.svg"),
