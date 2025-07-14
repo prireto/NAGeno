@@ -39,7 +39,7 @@ bed_dir = args[5]
 print(bed_dir)
 bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", "gene")))
 
-plot_dir = $ANALYSIS_DIR/filtered_bam_sr/depth/plots
+plot_dir = args[6]
 print(plot_dir)
 
 # if any of the input files are empty, stop execution
