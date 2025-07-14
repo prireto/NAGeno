@@ -123,9 +123,9 @@ for BC in "${BARCODES[@]}";do
 	FILE="$EXT$BC$MOD"
 
 	# skip if out file already exists
-	if [[ -e  "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam" ]]; then
+	if [[ -e  "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" ]]; then
 		# skip
-		echo "$FILE.sorted.bam already exists."
+		echo "$FILE$MAPQ_MOD.sorted.bam already exists."
 
 		#echo "$FILE"
 		#echo "$DIR/fastq/$FILE.fastq.gz"
