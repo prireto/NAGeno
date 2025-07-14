@@ -26,11 +26,6 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
 
-# run for post-filtering data
-Rscript ./scripts/depth_analysis.R "$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIR"
-
-echo "Post-filtering per sample read depth plots saved in: $OUT_DIR as post-filtering_depth.png and post-filtering_depth.svg"
-
 #######################
 
 
@@ -40,7 +35,7 @@ echo "This might take a while."
 mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
 
 # run for post-filtering data
-ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr/depth/plots")
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr/depth/plots")
 Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
 echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
