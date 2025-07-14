@@ -12,7 +12,6 @@ DEFAULT_CLAIR_PATH="run_clairs_to"
 DEFAULT_CLAIR_MODEL="ont_r10_dorado_sup_5khz_ss"
 DEFAULT_SNPEFF_REF="GRCh38.p14"
 DEFAULT_PLOT_ONLY=0
-DEFAULT_MUT_LIST="NA" # I dont know if this is used correctly as NA in R now. Needs to be checked in the R script.
 
 # Help function for main script
 display_main_help() {
@@ -58,7 +57,6 @@ display_plot_help() {
     printf "  %-20s %-20s %s\n" "--mapq" "MAPQ" "Minimum mapping quality (default: 0)"
     printf "  %-20s %-20s %s\n" "--analysis-dir" "DIR" "Directory for output (default: ./analysis)"
     printf "  %-20s %-20s %s\n" "--clairs-to-model" "CLAIR_MODEL" "Clairs-to model (default: ont_r10_dorado_sup_5khz)"
-    printf "  %-20s %-20s %s\n" "--mut-list" "MUT_LIST" "List of mutations for highlighting in depth plots (default: NA)"
     echo
     exit 0
 }
@@ -136,7 +134,6 @@ while [[ $# -gt 0 ]]; do
         --clairs-to-path) CLAIR_PATH="$2"; shift 2;;
         --clairs-to-model) CLAIR_MODEL="$2"; shift 2;;
         --plot-only) PLOT_ONLY=1; shift;;
-        --mut-list) MUT_LIST="$2"; shift 2;;
         --snpeff-ref) SNPEFF_REF="$2"; shift 2;;
         *) echo "Unknown option: $1"; display_main_help;;
     esac
@@ -165,7 +162,6 @@ EXT=${EXT:-$DEFAULT_EXT}
 CLAIR_PATH=${CLAIR_PATH:-$DEFAULT_CLAIR_PATH}
 CLAIR_MODEL=${CLAIR_MODEL:-$DEFAULT_CLAIR_MODEL}
 PLOT_ONLY=${PLOT_ONLY:-$DEFAULT_PLOT_ONLY}
-MUT_LIST=${MUT_LIST:-$DEFAULT_MUT_LIST}
 SNPEFF_REF=${SNPEFF_REF:-$DEFAULT_SNPEFF_REF}
 
 # Print parsed values
@@ -185,7 +181,6 @@ echo "  EXT=$EXT"
 echo "  CLAIR_PATH=$CLAIR_PATH"
 echo "  CLAIR_MODEL=$CLAIR_MODEL"
 echo "  PLOT_ONLY=$PLOT_ONLY"
-echo "  MUT_LIST=$MUT_LIST"
 echo "  SNPEFF_REF=$SNPEFF_REF"
 
 # Parameter preprocessing
@@ -208,7 +203,7 @@ if [[ "$SUBCOMMAND" == "plot" ]]; then
     
     # Run the script and log output
     $MANAGER run --no-capture-output -n nageno_plot \
-        ./scripts/genoplot.sh "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" "$EXT" "$MUT_LIST" "$BED"\
+        ./scripts/genoplot.sh "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" "$EXT" "$BED"\
         | tee "$LOG_FILE"
 
     echo "Plot script finished! Log saved at $LOG_FILE"
