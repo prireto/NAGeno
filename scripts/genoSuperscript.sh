@@ -135,29 +135,17 @@ for BC in "${BARCODES[@]}";do
 		# align fastq
 		#use short-read settings (sr) and increase some subsettings like k-mer and minimizer window size
 		#generally: increase both for longer reads, use -x map-ont for reads >1kb
-		minimap2 -ax sr -k19 -w10 -t "$THREADS" "$REF" "$ANALYSIS_DIR/filtered_fastq/$FILE.fastq.gz" | samtools sort -@ "$THREADS" | samtools view -hbS -@ "$THREADS" > "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam"
+  		# optionally filter bam file 
+		minimap2 -ax sr -k19 -w10 -t "$THREADS" "$REF" "$ANALYSIS_DIR/filtered_fastq/$FILE.fastq.gz" | samtools sort -@ "$THREADS" | samtools view -hbS -q "$MAPQ" -@ "$THREADS" > "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam"
 
 		#index bam files
-		samtools index -b "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam" -@ "$THREADS"
+		samtools index -b "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" -@ "$THREADS"
 
 		# save alignment stats in log file
 		echo "$DATE" >> "$BAM_LOG"
 		echo "$FILE" >> "$BAM_LOG"
-		samtools flagstat -O tsv -@ "$THREADS" "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam" >> "$BAM_LOG"
-		echo "$FILE.fastq has been aligned to $REF. Stats can be found in $BAM_LOG."
-	fi
-
-	# optionally filter bam file 
-	# skip if out file already exists
-	if [[ ! -e  "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" ]]; then
-		echo "Filter bams by MAPQ $MAPQ."
-
-		samtools view -b -q "$MAPQ" -@ "$THREADS" "$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam" > "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam"
-
-		#index MAPQ filtered bam files
-		samtools index -b "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" -@ "$THREADS"
-
-		echo "$FILE.sorted.bam has been filtered for MAPQ $MAPQ."
+		samtools flagstat -O tsv -@ "$THREADS" "$ANALYSIS_DIR/filtered_bam_sr/$FILE$MAPQ_MOD.sorted.bam" >> "$BAM_LOG"
+		echo "$FILE.fastq has been aligned to $REF and filtered for MAPQ $MAPQ. Stats can be found in $BAM_LOG."
 	fi
 done
 
@@ -167,18 +155,7 @@ done
 
 echo "############# BAM DEPTH CALCULATION ##############"
 
-# use samtoolsDepth.sh
-# parse thread count
-
-#call once for pre-filtering data - if chosen, thsi requires alignment of non-filtered fqs
-#DEPTH_MOD=""
-#bash ./samtoolsDepth.sh "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
-
-#call once for post-filtering data
-#DEPTH_MOD="$MOD$MAPQ_MOD"
-bash ./scripts/samtoolsDepth.sh "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr/" "$EXT" "${BARCODES[@]}" "$THREADS"
-
-bash "./scripts/samtoolsDepth.sh" "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
+bash ./scripts/samtoolsDepth.sh "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
 
 
 ###################
@@ -201,18 +178,18 @@ for BC in "${BARCODES[@]}";do
 		echo "$BC corresponds to sample $SAMPLE."
 
 		# skip if out dir already exists
-		if [[ -e  "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" ]]; then
+		if [[ -e  "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL" ]]; then
 			# skip
-			echo "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL already exists. Apparently small somatic variant calling has already been performed."
+			echo "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL already exists. Apparently small somatic variant calling has already been performed."
 		else
 			# create out dir
-			mkdir -p "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD_$CLAIR_MODEL"
+			mkdir -p "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL"
 
 			# define respective bam file
 			BAM="$ANALYSIS_DIR/filtered_bam_sr/$FILE.sorted.bam"
 
 			# run somatic var calling w ClairS-TO in sep environment
-			${CLAIR_PATH}  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --sample_name "$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
+			${CLAIR_PATH}  --tumor_bam_fn "$BAM" --ref_fn "$REF" --threads "$THREADS" --platform "$CLAIR_MODEL" --output_dir "$ANALYSIS_DIR/ClairS-TO/$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL" --sample_name "$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL" --snv_min_af 0.05 --indel_min_af 0.1 --min_coverage 4 --qual 12 --python python --samtools samtools --parallel parallel --pypy $(which pypy) --longphase $(which longphase) --whatshap whatshap --bed_fn $BED
 
 
 			echo "Small somatic variant calling for $FILE is complete using the $CLAIR_MODEL model."
@@ -232,13 +209,11 @@ echo "############# VCF ANNOTATION ##############"
 # filter and annotate vcfs using ensemble-vep (see /home/vera/gueseer/Scripts/vep.sh or vepDocker.sh)
 # http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html
 
-#ONLY WORKS with more recent java version than globally installed one - use the one from snpeff env
-
 mkdir -p "$ANALYSIS_DIR/SnpEff"
 
 for SAMPLE in "${SAMPLES[@]}"; do
 	# get rerspective sample name from $ANNO
-	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL"
+	FILE="$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL"
 	
 
 	# skip if out file already exists
@@ -266,7 +241,7 @@ echo "############# VCF EXTRACTION ##############"
 # create _temp vcf files w/o headers for all annotated snv files
 for SAMPLE in "${SAMPLES[@]}"; do
 	# get respective sample name from $ANNO
-	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL/snv.anno.vcf"
+	FILE="$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL/snv.anno.vcf"
 
 	# rm all lines until one starts w #CHROM
 	sed '/CHROM/,$!d' < "$ANALYSIS_DIR/ClairS-TO/$FILE" > "$ANALYSIS_DIR/ClairS-TO/${FILE}_temp"
@@ -276,7 +251,7 @@ done
 # gunzip all indel files and create _temp vcf files w/o headers
 for SAMPLE in "${SAMPLES[@]}"; do
 	# get respective sample name from $ANNO
-	FILE="$SAMPLE$MOD$MAPQ_MOD$CLAIR_MODEL/indel.vcf"
+	FILE="$SAMPLE$MOD${MAPQ_MOD}_$CLAIR_MODEL/indel.vcf"
 
 	gunzip "$ANALYSIS_DIR/ClairS-TO/$FILE.gz"
 
