@@ -9,8 +9,7 @@ MIN_Q="$6"
 MAX_U="$7"
 MAPQ="$8"
 EXT="$9"
-MUT_LIST="${10}"
-BED="${11}"
+BED="${10}"
 
 #preprocessing
 mapfile -t SAMPLES < <(cut -f1 $ANNO)
@@ -28,7 +27,7 @@ OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
 
 # run for post-filtering data
-Rscript ./scripts/depth_analysis.R "$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$MUT_LIST" "$BED" "$OUT_DIR"
+Rscript ./scripts/depth_analysis.R "$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIR"
 
 echo "Post-filtering per sample read depth plots saved in: $OUT_DIR as post-filtering_depth.png and post-filtering_depth.svg"
 
@@ -41,7 +40,7 @@ echo "This might take a while."
 mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
 
 # run for post-filtering data
-ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$MUT_LIST" "$BED")
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$BED")
 Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
 echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
