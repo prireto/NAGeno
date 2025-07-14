@@ -44,14 +44,14 @@ echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/
 
 
 # run for snp and indel individually
-Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "snv" "${SAMPLES[@]}"
-Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP$MAPQ_MOD$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "indel" "${SAMPLES[@]}"
+Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP${MAPQ_MOD}_$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "snv" "${SAMPLES[@]}"
+Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP${MAPQ_MOD}_$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "indel" "${SAMPLES[@]}"
 
 
-echo "SNV genotyping info saved in: $OUT_DIR$MOD_STRP$MAPQ_MOD${CLAIR_MODEL}_snv_vcf_collection.tsv."
-echo "Indel genotyping info saved in: $OUT_DIR$MOD_STRP$MAPQ_MOD${CLAIR_MODEL}_indel_vcf_collection.tsv."
+echo "SNV genotyping info saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv."
+echo "Indel genotyping info saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_indel_vcf_collection.tsv."
 
-Rscript ./scripts/genotyping.R "$OUT_DIR" "${MOD_STRP}${MAPQ_MOD}${CLAIR_MODEL}_snv_vcf_collection.tsv" "$MOD_STRP"
+Rscript ./scripts/genotyping.R "$OUT_DIR" "${MOD_STRP}${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv" "$MOD_STRP"
 
 echo "Genotyping results saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}-genotyping_results.tsv"
 
