@@ -40,7 +40,7 @@ echo "This might take a while."
 mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
 
 # run for post-filtering data
-ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$BED")
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$DEPTH_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr/depth/plots")
 Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
 echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
