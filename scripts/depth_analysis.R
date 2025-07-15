@@ -122,7 +122,7 @@ for (gene in genes) {
           )
   
   # save plot
-  file = paste0(plot_dir, "amplicon_geno_", gene, files_mod)
+  file = paste0(plot_dir, "/amplicon_geno_", gene, files_mod)
   svglite(filename = paste0(file, ".svg"), width = 5, height = 5 +(round(sqrt(length(unique(data$sample))))/3*2))
   print(plot_by_gene)
   dev.off()
