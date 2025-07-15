@@ -39,7 +39,7 @@ Clone this repository
 git clone https://github.com/prinzregententorte/NanoporeAmpliconGenotyping
 ```
 
-Two `.yaml` files are included into the repository at `envs/scripts`. For the full functionality (i.e. analysis and plotting), both of them need to be created via
+Two `.yml` files are included into the repository at `envs/scripts`. For the full functionality (i.e. analysis and plotting), both of them need to be created via
 
 ```bash
 conda env create -f NanoporeAmpliconGenotyping/envs/nageno.yml
@@ -52,32 +52,16 @@ conda activate nageno
 
 Further, the somatic variant caller, **ClairS-TO**, and its models need to be installed manually, as explained [here](https://github.com/HKU-BAL/ClairS-TO). 
 
+> [!WARNING]
+> `clairs-to` searches for the models at `echo ${CONDA_PREFIX}/bin`. This unfortunately can not be changed easily and thus you need to make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment. You can prevent this extra step by, as described above, activating the `nageno` environment first and then proceed with the manual `clairs-to` installation.
+
 <details>
 <summary>Condensed relevant information about the manual installation of ClairS-TO (click to expand)</summary>
 
 ```bash
-#SRP DELETE?
-# create and activate an environment named clairs-to
-# install pypy and packages in the environment
-
-# for mamba
-#mamba create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops scipy scikit-learn python=3.9.0 -y
-#mamba activate clairs-to
-
-# for micromamba
-#micromamba create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops scipy scikit-learn python=3.9.0 -y
-#micromamba activate clairs-to
-
-## for anaconda 
-#conda create -n clairs-to -c bioconda -c pytorch -c conda-forge pytorch tqdm clair3 bcftools einops python=3.9.0 -y
-#source activate clairs-to
-
-# in case of a timeout error (Download error (28) Timeout was reached) try modifying timeout settings (works like this only for mamba and conda)
+# in case of a timeout error (Download error (28) Timeout was reached) try modifying timeout settings (works exactly like this only for mamba and conda)
 #conda config --set remote_connect_timeout_secs 30
-#conda config --set remote_read_timeout_secs 30
-
-#SRP DELETE? END
- 
+#conda config --set remote_read_timeout_secs 30 
 
 git clone https://github.com/HKU-BAL/ClairS-TO.git
 cd ClairS-TO
@@ -100,15 +84,11 @@ tar -zxvf reference_files.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_cna_data/
 
 </details>
 
+Remember to deactivate the nageno env before using NAGeno.
 
-> [!WARNING]
-> `clairs-to` searches for the models at `echo ${CONDA_PREFIX}/bin`. This unfortunately can not be changed easily and thus you need to make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment. You can prevent this extra step by, as described above, activating the `nageno` environment first and then proceed with the manual `clairs-to` installation.
-
-SRP: if you want to access the tool from anywhere not just the dir you installed it in, you can add the path to you bashrc like this:
-XXXX
-Actually, you need to actually be at the nageno place because all paths are relative to that
-
-
+```bash
+conda deactivate
+```
 
 
 ## Usage
@@ -143,21 +123,21 @@ Usage: nageno analysis --dir DIR --anno ANNO --ref REF --bed BED --txfile TXFILE
 Mandatory arguments:
   --dir                DIR                  Directory containing fastq files
   --anno               ANNO                 Sample sheet file
-  --ref                REF                  Reference genome file
+  --ref                REF                  Reference genome file (.fa file needed, .fai files needs to be present too)
   --bed                BED                  BED file for reference
   --txfile             TXFILE               File for visualization
 
 Optional arguments:
   --manager            MANAGER              Package manager used to activate environments (default: conda)
   --threads            THREADS              Number of cores to use (default: 1)
-  --min-q              MIN_Q                Minimum base quality (default: 20)
-  --max-u              MAX_U                Percentage of bases allowed below MIN_Q (default: 5)
-  --mapq               MAPQ                 Minimum mapping quality (default: 0)
+  --min-q              MIN_Q                Minimum base quality (default: 30)
+  --max-u              MAX_U                Percentage of bases allowed below MIN_Q (default: 10)
+  --mapq               MAPQ                 Minimum mapping quality (default: 50)
   --analysis-dir       DIR                  Directory for output (default: ./analysis)
   --ext                EXT                  Sample name extension (default: SQK-RBK114-24_barcode)
-  --clairs-to-path     CLAIR_PATH           Absolute path to 'run_clairs_to'. (default: run_clairs_to)
+  --clairs-to-path     CLAIR_PATH           Absolute path to 'run_clairs_to' - depends on where ClairS-TO was installed. (default: run_clairs_to)
   --clairs-to-model    CLAIR_MODEL          Clairs-to model (default: ont_r10_dorado_sup_5khz)
-  --snpeff-ref         SNPEFF_REF           SNPeff reference genome (default: GRCh38.p14)
+  --snpeff-ref         SNPEFF_REF           SNPeff reference genome - should always be the same as the one used for alignment (default: GRCh38.p14)
 
 ```
 
@@ -179,9 +159,9 @@ Mandatory arguments:
 
 Optional arguments:
   --manager            MANAGER              Package manager used to activate environments (default: conda)
-  --min-q              MIN_Q                Minimum base quality (default: 20)
-  --max-u              MAX_U                Percentage of bases allowed below MIN_Q (default: 5)
-  --mapq               MAPQ                 Minimum mapping quality (default: 0)
+  --min-q              MIN_Q                Minimum base quality (default: 30)
+  --max-u              MAX_U                Percentage of bases allowed below MIN_Q (default: 10)
+  --mapq               MAPQ                 Minimum mapping quality (default: 50)
   --analysis-dir       DIR                  Directory for output (default: ./analysis)
   --clairs-to-model    CLAIR_MODEL          Clairs-to model (default: ont_r10_dorado_sup_5khz)
 
@@ -193,51 +173,60 @@ Using the exemplary test data in `tutorial`, the correct setup can be confirmed 
 
 ```bash
 nageno analysis \
-  --dir tutorial/data/fastq \
+  --dir tutorial/test_data/fastq \
   --anno tutorial/Src/barcode_assignment.tsv \
   --ref /path/to/ref/genome/hg38.fa \
   --bed tutorial/Src/geno_panel_v4.1.bed \
   --txfile tutorial/Src/tx.tsv \
-  --analysis-dir tutorial/analysis \ 
-  --threads 20 
+  --analysis-dir tutorial/analysis \
+  --threads 20 \
+  --clairs-to-path /path/to/run_clairs_to
 ```
 
 <details>
 <summary>Potential installation errors:</summary>
 
-- `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment.
+- `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment. => The best way to ensure that is by installing ClairS-TO while the nageno env is activated.
+- `[ERROR] while connecting to https://snpeff.blob.corewindows.net/databases/v5_2snpEff_v5_2[refGenomeVersion].zip`: SnpEff usually downloads the required databases automatically, however, every few years they re-structure which can lead to issues. Try a manual download within the nageno env at `.../mamba/envs/nageno/share/snpeff-5.2-1/` via `snpEff -download [refGenomeVersion]` or use another database. All databases can be viewed there via `snpEff databases`. The annotation database should always match the database previously used for annotation and variant calling. You can read more on that issue [here](https://www.biostars.org/p/296349/). 
 - ...
 
 </details>
 
 
-The `nageno plot` subfunction reulsts in the creation of various different visualisations for the `nageno analysis` output. This is supposed to be used as a quick and comprehensive overview about the genotypes of your samples.
+The `nageno plot` subfunction results in the creation of various different visualisations for the `nageno analysis` output. This is supposed to be used as a quick and comprehensive overview about the genotypes of your samples.
 
 ```bash
+
 nageno plot \
-  --dir tutorial/data/fastq \
+  --dir tutorial/test_data/fastq \
   --anno tutorial/Src/barcode_assignment.tsv \
   --ref /path/to/ref/genome/hg38.fa \
   --bed tutorial/Src/geno_panel_v4.1.bed \
   --txfile tutorial/Src/tx.tsv \
-  --analysis-dir tutorial/analysis \ 
-  --threads 20 
+  --analysis-dir tutorial/analysis \
+  --threads 20 \
+  --clairs-to-path /path/to/run_clairs_to
 ```
 
 > [!TIP]
-> `nageno plot` needs less arguments than `nageno analysis`. Since additional arguments are ignored, the quickest way to use the plotting functionality on your results is by replacing the `analysis` with the `plot` subcommand and re-run.  
+> `nageno plot` needs less arguments than `nageno analysis`. Since additional arguments are ignored, the quickest way to use the plotting functionality on your results is by replacing the `analysis` with the `plot` subcommand and re-run.
 
-#### Table 1 –
+Here is an overview of the generated output files for the provided test data.
+Additionally, per sample vcf files, more elaborate vcf collection files for all samples, filtered fastq and filtered bam files will be saved along with log files and htmls files generated by fastplong and SnpEff.
 
-#### Table 2 –
+#### Table 1 – SNV genotyping results (all SNVs): `SNV_genotyping_results.tsv`
 
-#### Table 3 – 
+#### Table 2 – SNV genotyping results (protein-coding SNVs): `prot_coding_SNV_genotyping_results.tsv`
 
-#### Plot 1 – Depth plot
+#### Table 3 – Summary of depth statistics: `Summary_depth_stats.tsv`
 
-#### Plot 2 – Allele frequency plot (protein coding SNVs)
 
-#### Plot 3 – Allele frequency plot (all SNVs)
+
+#### Plot 1 – Allele frequency plot (protein-coding SNVs): `prot_coding_SNV_genotyping_results.svg`
+
+#### Plot 2 – Allele frequency plot (all SNVs): `SNV_genotyping_results.svg`
+
+#### Plots 3-x – Per sample, per gene depth plots: `[GENE]_by_sample_[FILTER].svg` and `[GENE]_[FILTER].svg`
 
 
 ## Citation and Contribution
@@ -250,32 +239,5 @@ This project is licensed under the [Apache License 2.0](LICENSE).
 
 NOTES: Outdated?
 - currently needs to be started NanoporeAmpliconGenotyping dir to work - otherwise it doesn't find the scripts (ERROR: /tmp/tmpyzxjvtjl: line 3: ./scripts/genoSuperscript.sh: No such file or directory)
-- maybe as default out-dir create a new dir calles analysis or output in the fastq input location? (mkdir -p $dir/analysis)
-- maybe implement a stopping mechanism after an error? or only if 0 files are geenrated in a step? is that too complicated?
-- add option for setting absolute clair path
-- note in README that calirs-to needs to be installed prior to nagger and provide github link
-
-ERRORS:
-- ./scripts/genoSuperscript.sh: line 207: run_clairs_to: command not found
 - how about introducing a starting step like --start-at var-calling and internal options to start at any step in the pipeline?
-
 ###############################################################################################
-
-TODO for pipeline
-- in general is it possible to make things as options w default settings?
-    - genome ref (for alignment, vcf annotation etc.)
-    - kmer and window size for minimap
-    - max number of threads to use
-    - bed file
-    - basically important options for clairs-to
-    - nanopore kit
-- path to tx.tsv needs to be parsed for vcf extraction - no reasonable default here
-
-
-
-
-Notes
-- Pipeline needs to run in clirs-to env
-- SnpEff needs newer Java version than we have installed
-- SnpEff is installed in /home/vera/gueseer/App/tools/snpEff/
-
