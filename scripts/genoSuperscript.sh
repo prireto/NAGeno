@@ -89,7 +89,7 @@ done
 ### multiqc ###
 ###############
 
-echo "🎄"
+echo "############## RUN MULTIQC #######🎄#######"
 
 if [[ -e  "$ANALYSIS_DIR/filtered_fastq/multiqc_report.html" ]]; then
 	# skip
@@ -97,7 +97,7 @@ if [[ -e  "$ANALYSIS_DIR/filtered_fastq/multiqc_report.html" ]]; then
 
 else
 	# multiqc
-	echo "multiqc on fastp output..."
+	echo "multiqc on fastplong output..."
 	multiqc --dirs "$ANALYSIS_DIR/filtered_fastq/" --outdir "$ANALYSIS_DIR/filtered_fastq" --verbose
 	echo "multiqc performed on all filtered samples."
 fi
