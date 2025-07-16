@@ -18,16 +18,20 @@ args <- commandArgs(trailingOnly = TRUE)
 print("Input used for depth plotting:")
 
 files = args[1]
+files = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/filtered_bam_sr/depth/"
 print(files)
 
 files_specifier = args[2]
+files_specifier = "SQK-RBK114-24_barcode"
 print(files_specifier)
 
 files_mod = args[3]
+files_mod = "_q90_Q30_MAPQ50"
 print(files_mod)
 
 # load bc annotation
 anno_dir = args[4]
+anno_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/Src/barcode_assignment.tsv"
 print(anno_dir)
 bc_anno = data.frame(read_tsv(file = anno_dir, col_names = c("sample", "BC")))
 
@@ -36,10 +40,12 @@ bc_anno$sample = factor(bc_anno$sample, levels = bc_anno$sample[order(as.numeric
 
 
 bed_dir = args[5]
+bed_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/Src/geno_panel_v4.1.bed"
 print(bed_dir)
 bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", "gene")))
 
 plot_dir = args[6]
+plot_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/output/"
 print(plot_dir)
 
 # if any of the input files are empty, stop execution
@@ -78,7 +84,30 @@ print("Start depth plotting...")
 head(data)
 head(genes)
 
-# check depth for each gene by sample
+
+# dynamically size plot based on n(samples)
+# Number of unique samples
+n_samples <- length(unique(data$sample))
+
+# Number of columns and rows
+ncol <- ceiling(sqrt(n_samples))
+nrow <- ceiling(n_samples / ncol)
+
+# Subplot size (inches)
+subplot_width <- 2
+subplot_height <- 1.5
+
+# Basal space buffer
+base_buffer_w <- 1
+base_buffer_h <- 3.3
+
+# Total plot size
+plot_width <- ncol * subplot_width + base_buffer_w
+plot_height <- nrow * subplot_height + base_buffer_h
+plot_width
+plot_height
+
+# plot depth individually for each gene by sample
 for (gene in genes) {
   plot_by_sample = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
@@ -90,19 +119,18 @@ for (gene in genes) {
     geom_hline(yintercept = 10, color = "red", linetype = "dashed")+
     xlim(c(bed[bed$gene == gene, "start"], bed[bed$gene == gene, "stop"]))+
     theme(axis.text.x = element_text(angle = 90), legend.position = "none",
-          axis.title.x = element_text(hjust = 0.5, size = 14),
-          axis.title.y = element_text(hjust = 0.5, size = 14)
+          axis.title.x = element_text(hjust = 0.5, size = 14, margin = margin(t = 15)),
+          axis.title.y = element_text(hjust = 0.5, size = 14, margin = margin(r = 15))
           )
   
   # save plot
-  file = paste0(plot_dir, "/depth_", gene, "_by_sample")
-  svglite(filename = paste0(file, ".svg"), width = round(sqrt(length(unique(data$sample))))+4, height = round(sqrt(length(unique(data$sample))))+4)
+  file = paste0(plot_dir, "Depth_", gene, "_by_sample")
+  svglite(filename = paste0(file, ".svg"), width = plot_width, height = plot_height)
   print(plot_by_sample)
   dev.off()
 }
 
-# check depth for each gene in one plot
-plot_collection = ggplot()
+# plot depth for each gene in one plot
 
 for (gene in genes) {
   # generate plot
@@ -117,13 +145,13 @@ for (gene in genes) {
     geom_hline(yintercept = 10, color = "red", linetype = "dashed")+
     xlim(c(bed[bed$gene == gene, "start"], bed[bed$gene == gene, "stop"]))+
     theme(axis.text.x = element_text(angle = 90), legend.position = "bottom",
-          axis.title.x = element_text(hjust = 0.5, size = 14),
-          axis.title.y = element_text(hjust = 0.5, size = 14)
+          axis.title.x = element_text(hjust = 0.5, size = 14, margin = margin(t = 15)),
+          axis.title.y = element_text(hjust = 0.5, size = 14, margin = margin(r = 15))
           )
   
   # save plot
-  file = paste0(plot_dir, "/depth_", gene)
-  svglite(filename = paste0(file, ".svg"), width = 5, height = 5 +(round(sqrt(length(unique(data$sample))))/3*2))
+  file = paste0(plot_dir, "Depth_", gene)
+  svglite(filename = paste0(file, ".svg"), width = 6, height = 5 +(round(sqrt(length(unique(data$sample))))/3*2))
   print(plot_by_gene)
   dev.off()
 }
