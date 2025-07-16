@@ -49,7 +49,7 @@ bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", 
 
 plot_dir = args[6]
 # plot_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/output/"
-plot_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/analysis/output/" # 3s
+plot_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/analysis/output/depth/" # 3s
 print(plot_dir)
 
 # if any of the input files are empty, stop execution
@@ -115,7 +115,7 @@ plot_height
 for (gene in genes) {
   plot_by_sample = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
-    theme_ipsum(base_family = "sans")+
+    theme_itheme_ipsum(base_family = "Arial Narrow")psum(base_family = "sans")+
     ggtitle(paste0(gene, " amplicon - per base depth"))+
     scale_color_manual(values = viridis(length(unique(data$sample))))+
     scale_y_continuous(trans='log10', limits = c(1, 100000), labels = comma)+
@@ -140,7 +140,7 @@ for (gene in genes) {
   # generate plot
   plot_by_gene = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
-    theme_ipsum(base_family = "sans")+
+    theme_itheme_ipsum(base_family = "Arial Narrow")psum(base_family = "sans")+
     ggtitle(paste0(gene, " amplicon - per base depth"))+
     scale_color_manual(values = viridis(length(unique(data$sample))),
                        guide = guide_legend(ncol = pmax(round(sqrt(length(unique(data$sample)))) - round(sqrt(length(unique(data$sample)))/2), 5))
