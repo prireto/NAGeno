@@ -43,7 +43,7 @@ bc_anno$sample = factor(bc_anno$sample, levels = bc_anno$sample[order(as.numeric
 
 bed_dir = args[5]
 # bed_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/Src/geno_panel_v4.1.bed"
-bed_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/Src/geno_panel_v4.1.bed"
+bed_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/Src/geno_panel_v4.1.bed" # 3s
 print(bed_dir)
 bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", "gene")))
 
@@ -115,7 +115,7 @@ plot_height
 for (gene in genes) {
   plot_by_sample = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
-    theme_ipsum(base_family = "Arial Narrow")+
+    theme_ipsum(base_family = "DejaVu Sans Condensed")+
     ggtitle(paste0(gene, " amplicon - per base depth"))+
     scale_color_manual(values = viridis(length(unique(data$sample))))+
     scale_y_continuous(trans='log10', limits = c(1, 100000), labels = comma)+
@@ -140,7 +140,7 @@ for (gene in genes) {
   # generate plot
   plot_by_gene = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
-    theme_ipsum(base_family = "Arial Narrow")+
+    theme_ipsum(base_family = "DejaVu Sans Condensed")+
     ggtitle(paste0(gene, " amplicon - per base depth"))+
     scale_color_manual(values = viridis(length(unique(data$sample))),
                        guide = guide_legend(ncol = pmax(round(sqrt(length(unique(data$sample)))) - round(sqrt(length(unique(data$sample)))/2), 5))
