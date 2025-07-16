@@ -183,6 +183,6 @@ if(type == "snv"){
 
 
 # save result as tsv
-print(paste0("Output saved in", outdir))
-write_tsv(res, file = paste0(outdir, mod, "_", type, "_vcf_collection.tsv"))
+print(paste0("Output saved in", dir))
+write_tsv(res, file = paste0(dir, mod, "_", type, "_vcf_collection.tsv"))
 

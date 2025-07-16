@@ -29,13 +29,12 @@ mkdir -p "$OUT_DIR"
 #######################
 
 
-#echo "############# BAM DEPTH PLOTTING ##############"
+echo "################# BAM DEPTH PLOTTING ##################"
 echo "This might take a while."
 
-mkdir -p "$ANALYSIS_DIR/filtered_bam_sr/depth/plots"
 
 # run for post-filtering data
-ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr/depth/plots")
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIR")
 Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
 echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
@@ -51,7 +50,7 @@ Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD
 echo "SNV genotyping info saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv."
 echo "Indel genotyping info saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_indel_vcf_collection.tsv."
 
-Rscript ./scripts/genotyping.R "$OUT_DIR" "${MOD_STRP}${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv" "$MOD_STRP"
+Rscript ./scripts/genotyping.R "$ANALYSIS_DIR/ClairS-TO/" "${MOD_STRP}${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv" "$MOD_STRP" "$OUT_DIR"
 
 echo "Genotyping results saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}-genotyping_results.tsv"
 

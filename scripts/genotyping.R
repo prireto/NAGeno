@@ -43,11 +43,12 @@ args <- commandArgs(trailingOnly = TRUE)
 dir = args[1]
 #dir = "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/geno_all_sr/no_trim/sup/"
 
-
 data_file = args[2]
 #data_file = "q90_Q30_MAPQ50_ss_vcf_collection_geno2-3.tsv"
 mod = args[3]
 #mod = "q90_Q30_MAPQ50_ss"
+
+out_dir = args[4]
 
 
 data = data.frame(read_tsv(file = paste0(dir, data_file), col_names = T))
@@ -154,20 +155,20 @@ plot_cds = ggplot(results_plot, aes(x = SAMPLE_STRIPPED, y = AF, fill = SAMPLE_S
 print("Save plots.")
 
 # save result as tsv
-write_tsv(data, file = paste0(dir, mod, "-SNV_genotyping_results.tsv"))
-write_tsv(res_prot_cod, file = paste0(dir, mod, "-prot_coding_SNV_genotyping_results.tsv"))
+write_tsv(data, file = paste0(out_dir, "SNV_genotyping_results.tsv"))
+write_tsv(res_prot_cod, file = paste0(out_dir, "Prot_coding_SNV_genotyping_results.tsv"))
 
 # save plots
-svglite(filename = paste0(dir, mod, "-prot_coding_SNV_genotyping_results.svg"),
+svglite(filename = paste0(out_dir, "Prot_coding_SNV_genotyping_results.svg"),
         width = (round(sqrt(sqrt(pc_combined_counter))+2.5-(pc_sample_count/pc_snv_count)) * (pmax(pc_sample_count, 3) * 0.6) / sqrt(sqrt(pc_combined_counter)))+4,
         height = pmax(ceiling(pc_snv_count / round(sqrt(sqrt(pc_combined_counter))+1.7-(pc_sample_count/pc_snv_count)))*2.5, 4))
 print(plot_pc) # print ensures the plot is actually printed, otherwise timeout before saving
 dev.off()
 
-svglite(filename = paste0(dir, mod, "-SNV_genotyping_results.svg"),
+svglite(filename = paste0(out_dir, "SNV_genotyping_results.svg"),
         width = (round(sqrt(sqrt(cds_combined_counter))+2.5-(cds_sample_count/cds_snv_count)) * (pmax(cds_sample_count, 3) * 0.6) / sqrt(sqrt(cds_combined_counter)))+4,
         height = ceiling(cds_snv_count / round(sqrt(sqrt(cds_combined_counter))+1.7-(cds_sample_count/cds_snv_count)))*2.5)
 print(plot_cds) # print ensures the plot is actually printed, otherwise timeout before saving
 dev.off()
 
-print(paste0("Output saved in", dir))
+print(paste0("Output saved in", out_dir))

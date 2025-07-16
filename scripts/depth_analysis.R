@@ -95,7 +95,7 @@ for (gene in genes) {
           )
   
   # save plot
-  file = paste0(plot_dir, "/amplicon_geno_", gene, "_by_sample", files_mod)
+  file = paste0(plot_dir, "/", gene, "_by_sample")
   svglite(filename = paste0(file, ".svg"), width = round(sqrt(length(unique(data$sample))))+4, height = round(sqrt(length(unique(data$sample))))+4)
   print(plot_by_sample)
   dev.off()
@@ -122,7 +122,7 @@ for (gene in genes) {
           )
   
   # save plot
-  file = paste0(plot_dir, "/amplicon_geno_", gene, files_mod)
+  file = paste0(plot_dir, "/", gene)
   svglite(filename = paste0(file, ".svg"), width = 5, height = 5 +(round(sqrt(length(unique(data$sample))))/3*2))
   print(plot_by_gene)
   dev.off()
@@ -153,4 +153,4 @@ stats_summary <- stats %>%
 
 head(stats_summary)
 
-write_tsv(stats_summary, file = paste0(plot_dir, "/Summary", files_mod, "-depth_stats.tsv"))
+write_tsv(stats_summary, file = paste0(plot_dir, "/Summary_depth_stats.tsv"))
