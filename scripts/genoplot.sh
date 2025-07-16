@@ -25,6 +25,7 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
+mkdir -p "$OUT_DIR/depth/"
 
 #######################
 
@@ -33,11 +34,11 @@ echo "################# BAM DEPTH PLOTTING ##################"
 echo "This might take a while."
 
 
-# run for post-filtering data
-ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIR")
+# plot depth
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIR/depth/")
 Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
-echo "Post-filtering per sample read depth plots saved in: $DIR/filtered_bam_sr/depth/plots as post-filtering_depth.svg"
+echo "Per sample read depth plots and a summary of the depths statistics saved in: $OUT_DIR/depth/. More detailed data lies in $ANALYSIS_DIR/filtered_bam_sr/depth/."
 
 ###########################
 
@@ -47,11 +48,11 @@ Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD
 Rscript ./scripts/vcf_amplicon_geno_clairs-to.R "$ANALYSIS_DIR/ClairS-TO/" "$MOD_STRP${MAPQ_MOD}_$CLAIR_MODEL" "$TXFILE" "$OUT_DIR" "indel" "${SAMPLES[@]}"
 
 
-echo "SNV genotyping info saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv."
-echo "Indel genotyping info saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_indel_vcf_collection.tsv."
+echo "SNV genotyping info saved in: $ANALYSIS_DIR/ClairS-TO/$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv."
+echo "Indel genotyping info saved in: $ANALYSIS_DIR/ClairS-TO/$MOD_STRP${MAPQ_MOD}_${CLAIR_MODEL}_indel_vcf_collection.tsv."
 
-Rscript ./scripts/genotyping.R "$ANALYSIS_DIR/ClairS-TO/" "${MOD_STRP}${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv" "$MOD_STRP" "$OUT_DIR"
+Rscript ./scripts/genotyping.R "$ANALYSIS_DIR/ClairS-TO/" "${MOD_STRP}${MAPQ_MOD}_${CLAIR_MODEL}_snv_vcf_collection.tsv" "$OUT_DIR"
 
-echo "Genotyping results saved in: $OUT_DIR$MOD_STRP${MAPQ_MOD}-genotyping_results.tsv"
+echo "Genotyping results saved in: ${OUT_DIR}SNV_genotyping_results.tsv, ${OUT_DIR}Prot_coding_SNV_genotyping_results.tsv and ${OUT_DIR}Indel_genotyping_results.tsv"
 
 exit 0

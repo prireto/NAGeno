@@ -13,24 +13,24 @@ args <- commandArgs(trailingOnly = TRUE)
 # input args should be (1) dir w dirs for snv analysis per sample, (2) modifier (e.g. _q90Q20_ss) and then the names of all samples to be processed
 
 dir = args[1]
-# dir = "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/geno3_sr/no_trim/ClairS-TO/"
+# dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/ClairS-TO/"
 print(paste0("Working in ", dir))
 
 mod = args[2]
-# mod = "q90_Q30_MAPQ50_ss"
+# mod = "q90_Q30_MAPQ50_ont_r10_dorado_sup_5khz_ss"
 
 txfile = args[3]
-# txfile = "/home/vera/gueseer/Src/geno/tx.tsv"
+# txfile = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/Src/tx.tsv"
 
 outdir = args[4]
-# outdir = "/home/vera/gueseer/Projects/cancerna/genotyping/np_amplicon_geno/analysis/geno3_sr/no_trim/ClairS-TO/MH002_q90_Q30_MAPQ50_ss/"
+# outdir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/output/"
 
 type = args[5]
 # type = "indel"
 
 samps = args[6:length(args)]
 # samps = c("MH022", "MH037", "MH079", "MH080", "MH081", "x92.1", "OMM1.5", "Mel285", "Mel270", "M15", "MH024", "MH026", "MH032", "MH091", "MH010", "MH082", "MH028", "MH001", "MH009", "MH031", "MH027", "MH029", "MH083", "MH084")
-# samps = "MH002"
+# samps = c("S3", "S8")
 
 # load tx file
 tx = data.frame(read_tsv(file = txfile, col_names = T))
@@ -137,6 +137,8 @@ if(type == "snv"){
     res$GQ_PASS = ifelse(res$GQ>=10, "PASS", "FAIL")
     print(res)
   }
+  colnames(res)[colnames(res)=="SAMPLE"] = "SAMPLE_LONG"
+  
 } else if(type == "indel"){
   for (samp in samps) {
     SAMPLE=paste0(samp, "_", mod)
@@ -177,10 +179,22 @@ if(type == "snv"){
     res$GQ_PASS = ifelse(res$GQ>=10, "PASS", "FAIL")
     print(res)
   }
+  colnames(res)[colnames(res)=="SAMPLE"] = "SAMPLE_LONG"
+  # save indel result data in outdir
+  
+  print("Loaded data.")
+  
+  indel_final = res[, c("SAMPLE_LONG", "CHROM", "AF", "POS", "REF", "ALT", "GQ", "DP", "FILTER", "GT", "AD", "QUAL")]
+  indel_final$SAMPLE_LONG = gsub(pattern ="_.*", "", x = indel_final$SAMPLE_LONG)
+  colnames(indel_final)[colnames(indel_final)=="SAMPLE_LONG"] = "SAMPLE"
+  
+  # filter for GQ>=10 only
+  indel_final = subset(indel_final, GQ >= 10)
+  
+  write_tsv(indel_final, file = paste0(outdir, "Indel_genotyping_results.tsv"))
+  
+  print(paste0("Indel results saved in ", outdir, "Indel_genotyping_results.tsv"))
 }
-
-
-
 
 # save result as tsv
 print(paste0("Output saved in", dir))
