@@ -155,7 +155,7 @@ done
 
 echo "############# BAM DEPTH CALCULATION ##############"
 
-bash ./scripts/samtoolsDepth.sh "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
+#bash ./scripts/samtoolsDepth.sh "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
 
 
 ###################

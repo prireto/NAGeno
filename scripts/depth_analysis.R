@@ -26,7 +26,7 @@ files_specifier = args[2]
 print(files_specifier)
 
 files_mod = args[3]
-# files_mod = "_q90_Q30_MAPQ50"
+files_mod = "_q90_Q30_MAPQ50"
 print(files_mod)
 
 # load bc annotation

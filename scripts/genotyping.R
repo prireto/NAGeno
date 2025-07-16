@@ -42,13 +42,13 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # first arg is dir, second is tsv file
 dir = args[1]
-dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/ClairS-TO/"
+# dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/ClairS-TO/"
 
 data_file = args[2]
-data_file = "q90_Q30_MAPQ50_ont_r10_dorado_sup_5khz_ss_snv_vcf_collection.tsv"
+# data_file = "q90_Q30_MAPQ50_ont_r10_dorado_sup_5khz_ss_snv_vcf_collection.tsv"
 
 out_dir = args[3]
-out_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/output/"
+# out_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/output/"
 
 
 data = data.frame(read_tsv(file = paste0(dir, data_file), col_names = T))
@@ -241,4 +241,4 @@ write_tsv(data, file = paste0(out_dir, "SNV_genotyping_results.tsv"))
 write_tsv(res_prot_cod, file = paste0(out_dir, "Prot_coding_SNV_genotyping_results.tsv"))
 
 
-print(paste0("Output saved in", out_dir))
+print(paste0("Output saved in ", out_dir))
