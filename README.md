@@ -202,8 +202,6 @@ nageno analysis \
   ```
 
   The annotation database should always match the database previously used for annotation and variant calling. You can read more on that issue [here](https://www.biostars.org/p/296349/).
-- ...
-
 
 </details>
 
