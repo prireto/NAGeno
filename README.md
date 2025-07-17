@@ -140,6 +140,7 @@ Optional arguments:
   --snpeff-ref         SNPEFF_REF           SNPeff reference genome - should always be the same as the one used for alignment (default: GRCh38.p14)
 
 ```
+Currently available clairs-to models are 'ont_r10_dorado_sup_4khz', 'ont_r10_dorado_hac_4khz', 'ont_r10_dorado_sup_5khz', 'ont_r10_dorado_sup_5khz_ss', 'ont_r10_dorado_sup_5khz_ssrs', 'ont_r10_guppy_sup_4khz', 'ont_r10_guppy_hac_5khz', 'ilmn' and 'hifi_revio'. They can be checked [here](https://github.com/HKU-BAL/ClairS-TO?tab=readme-ov-file#usage).
 
 #### Plot
 
