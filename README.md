@@ -306,39 +306,7 @@ Output files and their respective visualisation for the provided test data are d
 
 </details>
 
-<details>
-<summary>Remove this part if you like my prpoposal below better, if not, just delete my proposal:</summary>
-
-#### Per sample, per gene depth plots:
-<!-- First 2×2 block -->
-<table>
-  <tr>
-    <td><img src="tutorial/test_output/depth/Depth_GNA11.svg" width="350"/></td>
-    <td><img src="tutorial/test_output/depth/Depth_GNAQ.svg" width="350"/></td>
-  </tr>
-  <tr>
-    <td><img src="tutorial/test_output/depth/Depth_SF3B1.svg" width="350"/></td>
-    <td><img src="tutorial/test_output/depth/Depth_SRSF2.svg" width="350"/></td>
-  </tr>
-</table>
-
-<br>
-
-<!-- Second 2×2 block -->
-<table>
-  <tr>
-    <td><img src="tutorial/test_output/depth/Depth_GNA11_by_sample.svg" width="350"/></td>
-    <td><img src="tutorial/test_output/depth/Depth_GNAQ_by_sample.svg" width="350"/></td>
-  </tr>
-  <tr>
-    <td><img src="tutorial/test_output/depth/Depth_SF3B1_by_sample.svg" width="350"/></td>
-    <td><img src="tutorial/test_output/depth/Depth_SRSF2_by_sample.svg" width="350"/></td>
-  </tr>
-</table>
-
-</details>
-
-#### Per sample, per gene depth plots:
+#### Per sample, per gene depth plots exemplarily displayed for two genes:
 <table>
   <tr>
     <td><img src="tutorial/test_output/depth/Depth_GNA11_by_sample.svg" width="350"/></td>
