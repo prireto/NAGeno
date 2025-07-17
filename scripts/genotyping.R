@@ -11,9 +11,14 @@ suppressPackageStartupMessages({
     library(svglite)
     library(hrbrthemes)
     library(scales)
+    library(showtext)
 })
 
 ############
+
+# add narrow font for plotting
+font_add_google("Roboto Condensed", "roboto_condensed")
+showtext_auto()
 
 # colors:
 
@@ -160,7 +165,7 @@ plot_height <- nrow * facet_height + title_buffer
 
 plot_pc = ggplot(res_prot_cod_plot, aes(x = SAMPLE, y = AF, fill = SAMPLE))+
   geom_bar(stat = "identity", position = "dodge")+
-  theme_ipsum()+
+  theme_ipsum(base_family = "roboto_condensed")+
   ggtitle("Genotyping results - protein-coding SNVs")+
   geom_hline(yintercept = 0.5)+
   ylab("Allele Frequency")+
@@ -212,7 +217,7 @@ plot_height <- nrow * facet_height + title_buffer
 
 plot_cds = ggplot(results_plot, aes(x = SAMPLE, y = AF, fill = SAMPLE))+
   geom_bar(stat = "identity", position = "dodge")+
-  theme_ipsum()+
+  theme_ipsum(base_family = "roboto_condensed")+
   ggtitle("Genotyping results - all SNVs")+
   geom_hline(yintercept = 0.5)+
   ylab("Allele Frequency")+

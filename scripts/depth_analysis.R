@@ -1,5 +1,4 @@
 # visualize seqdepth
-
 suppressPackageStartupMessages({
     library(ggplot2)
     library(hrbrthemes)
@@ -12,28 +11,33 @@ suppressPackageStartupMessages({
     library(rlang) # for interpreting strings as symbols (enables pasted strings to be var placeholders)
     library(dplyr)
     library(fuzzyjoin)
+    library(showtext)
 })
+
+# add narrow font for plotting
+font_add_google("Roboto Condensed", "roboto_condensed")
+showtext_auto()
 
 args <- commandArgs(trailingOnly = TRUE)
 print("Input used for depth plotting:")
 
 files = args[1]
 # files = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/filtered_bam_sr/depth/"
-files = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/analysis/filtered_bam_sr/depth/" # 3s
+# files = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/analysis/filtered_bam_sr/depth/" # 3s
 print(files)
 
 files_specifier = args[2]
-files_specifier = "SQK-RBK114-24_barcode"
+# files_specifier = "SQK-RBK114-24_barcode"
 print(files_specifier)
 
 files_mod = args[3]
-files_mod = "_q90_Q30_MAPQ50"
+# files_mod = "_q90_Q30_MAPQ50"
 print(files_mod)
 
 # load bc annotation
 anno_dir = args[4]
 # anno_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/Src/barcode_assignment.tsv"
-anno_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/Src/barcode_assignment.tsv" # 3s
+# anno_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/Src/barcode_assignment.tsv" # 3s
 print(anno_dir)
 bc_anno = data.frame(read_tsv(file = anno_dir, col_names = c("sample", "BC")))
 
@@ -43,13 +47,13 @@ bc_anno$sample = factor(bc_anno$sample, levels = bc_anno$sample[order(as.numeric
 
 bed_dir = args[5]
 # bed_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/Src/geno_panel_v4.1.bed"
-bed_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/Src/geno_panel_v4.1.bed" # 3s
+# bed_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/Src/geno_panel_v4.1.bed" # 3s
 print(bed_dir)
 bed = data.frame(read_tsv(file = bed_dir, col_names = c("chr", "start", "stop", "gene")))
 
 plot_dir = args[6]
 # plot_dir = "/home/vera/gueseer/Pipelines/NanoporeAmpliconGenotyping/tutorial/analysis/output/"
-plot_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/analysis/output/depth/" # 3s
+# plot_dir = "/home/gueseer/permanent/App/tools/NAGeno/tutorial/analysis/output/depth/" # 3s
 print(plot_dir)
 
 # if any of the input files are empty, stop execution
@@ -115,7 +119,7 @@ plot_height
 for (gene in genes) {
   plot_by_sample = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
-    theme_ipsum(base_family = "DejaVu Sans Condensed")+
+    theme_ipsum(base_family = "roboto_condensed")+
     ggtitle(paste0(gene, " amplicon - per base depth"))+
     scale_color_manual(values = viridis(length(unique(data$sample))))+
     scale_y_continuous(trans='log10', limits = c(1, 100000), labels = comma)+
@@ -140,7 +144,7 @@ for (gene in genes) {
   # generate plot
   plot_by_gene = ggplot(subset(data, gene == gene), aes(x = position, y = depth, color = sample))+
     geom_line()+
-    theme_ipsum(base_family = "DejaVu Sans Condensed")+
+    theme_ipsum(base_family = "roboto_condensed")+
     ggtitle(paste0(gene, " amplicon - per base depth"))+
     scale_color_manual(values = viridis(length(unique(data$sample))),
                        guide = guide_legend(ncol = pmax(round(sqrt(length(unique(data$sample)))) - round(sqrt(length(unique(data$sample)))/2), 5))
