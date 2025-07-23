@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Load parameters
 DIR="$1"
 ANNO="$2"
@@ -11,17 +12,15 @@ MAPQ="$8"
 EXT="$9"
 BED="${10}"
 
-#preprocessing
+#pre-processing
 mapfile -t SAMPLES < <(cut -f1 $ANNO)
 
 QUANT=$((100 - MAX_U))
 MOD="_q${QUANT}_Q${MIN_Q}"
 MOD_STRP="q${QUANT}_Q${MIN_Q}"
 MAPQ_MOD="_MAPQ${MAPQ}"
-# Activate the required Conda environment
+# Activate the required conda environment
 
-#conda deactivate
-#conda activate nagger_plotting
 
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
