@@ -230,7 +230,7 @@ Output files and their respective visualisation for the provided test data are d
 <details>
 <summary>Table 1 – SNV genotyping results (all SNVs):</summary>
 
-[`SNV_genotyping_results.tsv`](SNV_genotyping_results.tsv)
+[`SNV_genotyping_results.tsv`](tutorial/test_output/SNV_genotyping_results.tsv)
 
 | SAMPLE | GENE | CHROM | HGVS.p | HGVS.c | AF | POS | REF | ALT | GQ | DP | FILTER | GT | AD | QUAL | Annotation | Annotation_Impact | Feature_ID | mutGeneID.p | mutGeneID.c |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -265,7 +265,7 @@ Output files and their respective visualisation for the provided test data are d
 <details>
 <summary>Table 2 – SNV genotyping results (protein-coding SNVs):</summary>
 
-[`Prot_coding_SNV_genotyping_results.tsv`](Prot_coding_SNV_genotyping_results.tsv)
+[`Prot_coding_SNV_genotyping_results.tsv`](tutorial/test_output/Prot_coding_SNV_genotyping_results.tsv)
 
 
 | SAMPLE | GENE | CHROM | HGVS.p | HGVS.c | AF | POS | REF | ALT | GQ | DP | FILTER | GT | AD | QUAL | Annotation | Annotation_Impact | Feature_ID | mutGeneID.p | mutGeneID.c |
@@ -290,7 +290,7 @@ Output files and their respective visualisation for the provided test data are d
 <details>
 <summary>Table 3 – Indel genotyping results:</summary>
 
-[`Indel_genotyping_results.tsv`](Indel_genotyping_results.tsv)
+[`Indel_genotyping_results.tsv`](tutorial/test_output/Indel_genotyping_results.tsv)
 | SAMPLE | CHROM | AF | POS | REF | ALT | GQ | DP | FILTER | GT | AD | QUAL |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | S8 | chr17 | 0.1902 | 76736863 | GGTGTGAGTCCGGGGGGCGGCCGTA | G | 24 | 594 | PASS | 0/1 | 479;113 | 24.9978 |
