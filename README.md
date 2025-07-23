@@ -6,6 +6,8 @@ A comprehensive pipeline for SNV and indel genotyping on Nanopore Amplicon Seque
 NAGeno starts with basecalled Nanopore Amplicon sequences and returns two overview genotyping tables (SNV and indel), a SNV genotype overview plot and more elaborate underlying files.
 It works for multiplexed samples, as long as each barcode has only been used once.
 
+[Publication](insert here)
+
 ## Table of contents
 * [Introduction](#introduction)
 * [Workflow](#workflow)
@@ -30,6 +32,8 @@ NAGeno performs SNV and indel genotyping on fastq files of nanopore amplicon seq
 <div align="center">
     <img src="https://github.com/user-attachments/assets/6ef939a9-2c55-47db-b308-c4d900f81268" width="400">
 </div>
+
+_Created in BioRender._
 
 ## Installation
 
@@ -330,7 +334,7 @@ Output files and their respective visualisation for the provided test data are d
 
 ## Citation
 NAGeno has been described and benchmarked here:
-BioRXive link / doi
+[Publication](BioRXive link / doi)
 
 Please cite NAGeno if you use it in your analysis.
 [BibTex key.]
