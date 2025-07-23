@@ -286,8 +286,19 @@ Output files and their respective visualisation for the provided test data are d
   <img src="tutorial/test_output/Prot_coding_SNV_genotyping_results.svg" width="440" alt="Protein-coding SNVs of tutorial test data">
 </p>
 
+
 <details>
-<summary>Table 3 – Summary of depth statistics:</summary>
+<summary>Table 3 – Indel genotyping results:</summary>
+
+[`Indel_genotyping_results.tsv`](Indel_genotyping_results.tsv)
+| SAMPLE | CHROM | AF | POS | REF | ALT | GQ | DP | FILTER | GT | AD | QUAL |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| S8 | chr17 | 0.1902 | 76736863 | GGTGTGAGTCCGGGGGGCGGCCGTA | G | 24 | 594 | PASS | 0/1 | 479;113 | 24.9978 |
+
+</details>
+
+<details>
+<summary>Table 4 – Summary of depth statistics:</summary>
 
 [`Summary_depth_stats.tsv`](tutorial/test_output/depth/Summary_depth_stats.tsv)
 
