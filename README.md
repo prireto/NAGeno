@@ -328,15 +328,17 @@ Output files and their respective visualisation for the provided test data are d
 </table>
 
 
-## Citation and Contribution
+## Citation
+NAGeno has been described and benchmarked here:
 BioRXive link / doi
+
+Please cite NAGeno if you use it in your analysis.
+[BibTex key.]
+
+## Contribution
+We welcome all forms of input, new ideas, user feedback, or performance improvements. If you come across any bugs or unexpected behavior, we encourage you to open an issue and include relevant error messages or context to help us troubleshoot efficiently.
 
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE).
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-
-NOTES: Outdated?
-- currently needs to be started NanoporeAmpliconGenotyping dir to work - otherwise it doesn't find the scripts (ERROR: /tmp/tmpyzxjvtjl: line 3: ./scripts/genoSuperscript.sh: No such file or directory)
-- how about introducing a starting step like --start-at var-calling and internal options to start at any step in the pipeline?
-###############################################################################################
