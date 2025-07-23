@@ -58,6 +58,7 @@ echo "MOD: $MOD"
 
 # create outdir if it doesn't exist yet
 mkdir -p "$ANALYSIS_DIR/filtered_fastq"
+mkdir -p "$ANALYSIS_DIR/qc/fastplong"
 
 for BC in "${BARCODES[@]}"; do
 	echo "${BC}"
@@ -77,8 +78,8 @@ for BC in "${BARCODES[@]}"; do
 		--unqualified_percent_limit $MAX_U \
 		--thread $THREADS \
 		--out "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastq.gz" \
-		--json "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.json" \
-		--html "$ANALYSIS_DIR/filtered_fastq/${FILE}$MOD.fastplong.html" \
+		--json "$ANALYSIS_DIR/qc/fastplong/${FILE}$MOD.fastplong.json" \
+		--html "$ANALYSIS_DIR/qc/fastplong/${FILE}$MOD.fastplong.html" \
 		--disable_adapter_trimming
 
 		echo "${FILE}$MOD.fastq.gz has been created."
@@ -90,6 +91,7 @@ done
 ###############
 
 echo "############## RUN MULTIQC #######🎄#######"
+mkdir -p "$ANALYSIS_DIR/qc/multiqc"
 
 if [[ -e  "$ANALYSIS_DIR/filtered_fastq/multiqc_report.html" ]]; then
 	# skip
@@ -98,7 +100,7 @@ if [[ -e  "$ANALYSIS_DIR/filtered_fastq/multiqc_report.html" ]]; then
 else
 	# multiqc
 	echo "multiqc on fastplong output..."
-	multiqc --dirs "$ANALYSIS_DIR/filtered_fastq/" --outdir "$ANALYSIS_DIR/filtered_fastq" --verbose
+	multiqc --dirs "$ANALYSIS_DIR/filtered_fastq/" --outdir "$ANALYSIS_DIR/qc/multiqc/" --verbose
 	echo "multiqc performed on all filtered samples."
 fi
 
