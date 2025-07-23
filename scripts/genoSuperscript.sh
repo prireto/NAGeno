@@ -100,7 +100,7 @@ if [[ -e  "$ANALYSIS_DIR/filtered_fastq/multiqc_report.html" ]]; then
 else
 	# multiqc
 	echo "multiqc on fastplong output..."
-	multiqc --dirs "$ANALYSIS_DIR/filtered_fastq/" --outdir "$ANALYSIS_DIR/qc/multiqc/" --verbose
+	multiqc --dirs "$ANALYSIS_DIR/qc/multiqc/" --outdir "$ANALYSIS_DIR/qc/multiqc/" --verbose
 	echo "multiqc performed on all filtered samples."
 fi
 
