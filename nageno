@@ -192,16 +192,16 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 DATE=$(date +'%Y-%m-%d')
 
 # Check if plot output files exist already
-if [[ "$SUBCOMMAND" == "plot" && -f "$ANALYSIS_DIR/ClairS-TO/SNV_genotyping_results.tsv" ]]; then
-    echo "Error: It seems like genotyping has already been performed in the --analysis-dir you specified. Use a different one to prevent overwriting data."
-    exit 1
-fi
+#if [[ "$SUBCOMMAND" == "plot" && -f "$ANALYSIS_DIR/ClairS-TO/SNV_genotyping_results.tsv" ]]; then
+#    echo "Error: It seems like genotyping has already been performed in the --analysis-dir you specified. Use a different one to prevent overwriting data."
+#    exit 1
+#fi
 
 # Check if analysis output files exist already
-if [[ "$SUBCOMMAND" == "analysis" && -d "$ANALYSIS_DIR/ClairS-TO" ]]; then
-    echo "Error: It seems like variant-calling has already been performed in the --analysis-dir you specified. Use a different one to prevent overwriting data."
-    exit 1
-fi
+#if [[ "$SUBCOMMAND" == "analysis" && -d "$ANALYSIS_DIR/ClairS-TO" ]]; then
+#    echo "Error: It seems like variant-calling has already been performed in the --analysis-dir you specified. Use a different one to prevent overwriting data."
+#    exit 1
+#fi
 
 # log files
 LOG_DIR="$ANALYSIS_DIR/logs"

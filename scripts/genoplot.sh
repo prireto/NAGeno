@@ -25,7 +25,7 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
-mkdir -p "$OUT_DIR/depth/"
+mkdir -p "$OUT_DIRdepth/"
 
 #######################
 
@@ -35,10 +35,10 @@ echo "This might take a while."
 
 
 # plot depth
-ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIR/depth/")
+ARGS=("$ANALYSIS_DIR/filtered_bam_sr/depth/" "$EXT" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$OUT_DIRdepth/")
 Rscript "./scripts/depth_analysis.R" "${ARGS[@]}"
 
-echo "Per sample read depth plots and a summary of the depths statistics saved in: $OUT_DIR/depth/. More detailed data lies in $ANALYSIS_DIR/filtered_bam_sr/depth/."
+echo "Per sample read depth plots and a summary of the depths statistics saved in: $OUT_DIRdepth/. More detailed data lies in $ANALYSIS_DIR/filtered_bam_sr/depth/."
 
 ###########################
 
