@@ -262,7 +262,7 @@ Output files and their respective visualisation for the provided test data are d
 
 #### Allele frequency plot (all SNVs):
 <p align="left">
-  <img src="tutorial/test_output/SNV_genotyping_results.svg" width="440" alt="SNVs of tutorial test data">
+  <img src="tutorial/test_output/SNV_genotyping_results.svg" width="800" alt="SNVs of tutorial test data">
 </p>
 
 
@@ -287,7 +287,7 @@ Output files and their respective visualisation for the provided test data are d
 
 #### Allele frequency plot (protein-coding SNVs):
 <p align="left">
-  <img src="tutorial/test_output/Prot_coding_SNV_genotyping_results.svg" width="440" alt="Protein-coding SNVs of tutorial test data">
+  <img src="tutorial/test_output/Prot_coding_SNV_genotyping_results.svg" width="800" alt="Protein-coding SNVs of tutorial test data">
 </p>
 
 
