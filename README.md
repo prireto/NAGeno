@@ -40,14 +40,15 @@ _Created in BioRender._
 Clone this repository
 
 ```bash
-git clone https://github.com/prinzregententorte/NanoporeAmpliconGenotyping
+git clone https://github.com/prireto/NAGeno.git
+
 ```
 
 Two `.yml` files are included into the repository at `envs/scripts`. For the full functionality (i.e. analysis and plotting), both of them need to be created via
 
 ```bash
-conda env create -f NanoporeAmpliconGenotyping/envs/nageno.yml
-conda env create -f NanoporeAmpliconGenotyping/envs/nageno_plot.yml
+conda env create -f NAGeno/envs/nageno.yml
+conda env create -f NAGeno/envs/nageno_plot.yml
 conda activate nageno
 ```
 
