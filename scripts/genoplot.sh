@@ -24,7 +24,7 @@ MAPQ_MOD="_MAPQ${MAPQ}"
 
 OUT_DIR="$ANALYSIS_DIR/output/"
 mkdir -p "$OUT_DIR"
-mkdir -p "$OUT_DIRdepth/"
+mkdir -p "${OUT_DIR}depth/"
 
 #######################
 
