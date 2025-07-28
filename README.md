@@ -128,9 +128,9 @@ Usage: nageno analysis --dir DIR --anno ANNO --ref REF --bed BED --txfile TXFILE
 Mandatory arguments:
   --dir                DIR                  Directory containing fastq files
   --anno               ANNO                 Sample sheet file
-  --ref                REF                  Reference genome file (.fa file needed, .fai files needs to be present too)
+  --ref                REF                  Reference genome file - .fa file needed, .fai files needs to be present too
   --bed                BED                  BED file for reference
-  --txfile             TXFILE               File for visualization
+  --txfile             TXFILE               File for visualization - transcript annotation needs to match the SPEFF_REF, default is RefSeq (NM_...), can also be ENSEMBL (ENST...)
 
 Optional arguments:
   --manager            MANAGER              Package manager used to activate environments (default: conda)
@@ -194,16 +194,20 @@ nageno analysis \
 <summary>Potential installation errors:</summary>
 
 - `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment. => The best way to ensure that is by installing ClairS-TO while the nageno env is activated.
-- `[ERROR] while connecting to https://snpeff.blob.corewindows.net/databases/v5_2snpEff_v5_2[refGenomeVersion].zip`: SnpEff usually downloads the required databases automatically. However, there have been occasional issues due to re-structuring in the past. In that case, try a manual download within the tool environment at `.../mamba/envs/tool/share/snpeff-5.2-1/` via:
+- `[ERROR] while connecting to https://snpeff.blob.corewindows.net/databases/v5_2snpEff_v5_2[refGenomeVersion].zip`: SnpEff usually downloads the required databases automatically. However, there have been occasional issues due to re-structuring in the past. In that case, try a manual download within the tool environment at `.../conda/envs/tool/share/snpeff-5.2-1/` via:
 
   ```bash
-  snpEff download [refGenomeVersion]
+  conda activate nageno #snpeff runs in the nageno env
+  java -Xmx4g -jar snpEff.jar download -v [refGenomeVersion]
+  conda deactivate
   ```
 
   or use another database. All databases can be viewed with:
 
   ```bash
-  snpEff databases
+  conda activate nageno #snpeff runs in the nageno env
+  java -Xmx4g -jar snpEff.jar databases
+  conda deactivate
   ```
 
   The annotation database should always match the database previously used for annotation and variant calling. You can read more on that issue [here](https://www.biostars.org/p/296349/).
