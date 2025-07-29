@@ -17,6 +17,9 @@ CLAIR_PATH="${12}"
 CLAIR_MODEL="${13}"
 SNPEFF_REF="${14}"
 
+#Automatically assessed
+SCRIPT_DIR="${15}"
+
 #preprocessing
 
 mapfile -t SAMPLES < <(cut -f1 $ANNO)
@@ -126,7 +129,7 @@ done
 
 echo "############# BAM DEPTH CALCULATION ##############"
 
-bash ./scripts/samtoolsDepth.sh "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
+bash "$SCRIPT_DIR/scripts/samtoolsDepth.sh" "$MOD$MAPQ_MOD" "$ANNO" "$BED" "$ANALYSIS_DIR/filtered_bam_sr" "$EXT" "${BARCODES[@]}" "$THREADS"
 
 
 ###################
