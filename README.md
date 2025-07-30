@@ -30,7 +30,7 @@ Identifying SNVs and indels is essential in molecular biology and clinical diagn
 NAGeno performs SNV and indel genotyping on fastq files of nanopore amplicon sequencing. Amplicons can cover regions of approx. 50 bp - 5 kb. In a fully automated workflow, we generate detailed tables for both SNVs and indels, along with an overview plot of SNVs per sample, by following these steps:
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/6ef939a9-2c55-47db-b308-c4d900f81268" width="400">
+    <img src= NAGeno_workflow.png width="400">
 </div>
 
 _Created in BioRender._
@@ -191,7 +191,7 @@ nageno analysis \
 ```
 
 <details>
-<summary>Potential installation errors:</summary>
+<summary>Potential errors:</summary>
 
 - `[ERROR] file .../envs/nageno/bin/clairs-to_models/ont_r10_dorado_sup_5khz/pileup_affirmative.pkl not found`: Make sure that `clairs-to_models`, `clairs-to_databases`, and `clairs-to_cna_data` exist in the bin-folder of the `nageno` environment. => The best way to ensure that is by installing ClairS-TO while the nageno env is activated.
 - `[ERROR] while connecting to https://snpeff.blob.corewindows.net/databases/v5_2snpEff_v5_2[refGenomeVersion].zip`: SnpEff usually downloads the required databases automatically. However, there have been occasional issues due to re-structuring in the past. In that case, try a manual download within the tool environment at `.../conda/envs/tool/share/snpeff-5.2-1/` via:
@@ -212,6 +212,7 @@ nageno analysis \
 
   The annotation database should always match the database previously used for annotation and variant calling. You can read more on that issue [here](https://www.biostars.org/p/296349/).
 - `ERROR conda.cli.main_run:execute(33): Subprocess for 'conda run ... failed`: During analysis, either the `nageno` or the `nageno_plot` environment is used to run commands. A common error can occur at this stage due to a known Conda issue where [conda commands are not available in subshells within Bash scripts](https://github.com/conda/conda/issues/7980). Fortunately, the workarounds proposed in that issue resolved the problem in all our test cases.
+- `EnvironmentLocationNotFound: Not a conda environment: /home/user/App/conda/envs/nageno/envs/nageno`: No conda/mamba/micromamba environment should be activated when you start the script. Nageno activated the environments it needs, pre-activation causes confusion.
 
 </details>
 
