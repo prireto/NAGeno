@@ -221,7 +221,7 @@ if [[ "$SUBCOMMAND" == "plot" ]]; then
     
     # Run the script and log output
     $MANAGER run --no-capture-output -n nageno_plot \
-        "$SCRIPT_DIR/scripts/genoplot.sh" "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" "$EXT" "$BED"\
+        "$SCRIPT_DIR/scripts/genoplot.sh" "$DIR" "$ANNO" "$TXFILE" "$ANALYSIS_DIR" "$CLAIR_MODEL" "$MIN_Q" "$MAX_U" "$MAPQ" "$EXT" "$BED" "$SCRIPT_DIR"\
         | tee "$LOG_FILE"
 
     echo "Plot script finished! Log saved at $LOG_FILE"
@@ -232,8 +232,6 @@ elif [[ "$SUBCOMMAND" == "analysis" ]]; then
     echo "Running analysis script... Logging to $LOG_FILE"
 
     # Run the script and log output
-    echo "SCRIPT_DIR=$SCRIPT_DIR"
-    echo "Trying to run: bash $SCRIPT_DIR/scripts/genoSuperscript.sh"
     conda run --no-capture-output -n nageno \
         "$SCRIPT_DIR/scripts/genoSuperscript.sh" "$DIR" "$ANNO" "$REF" "$BED" "$TXFILE" "$THREADS" "$MIN_Q" "$MAX_U" "$MAPQ" "$ANALYSIS_DIR" "$EXT" "$CLAIR_PATH" "$CLAIR_MODEL" "$SNPEFF_REF" "$SCRIPT_DIR"\
         | tee "$LOG_FILE"

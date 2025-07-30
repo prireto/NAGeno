@@ -74,22 +74,6 @@ for BC in "${BARCODES[@]}"; do
 	echo "${FILE}$MOD.fastq.gz has been created."
 done
 
-###############
-### multiqc ###
-###############
-
-### REMOVE THIS PART? ###
-
-echo "############## RUN MULTIQC #######🎄#######"
-mkdir -p "$ANALYSIS_DIR/qc/multiqc"
-
-# multiqc
-echo "multiqc on fastplong output..."
-multiqc --dirs "$ANALYSIS_DIR/qc/multiqc/" --outdir "$ANALYSIS_DIR/qc/multiqc/" --verbose
-echo "multiqc performed on all filtered samples."
-
-
-
 ########################
 ### align w minimap2 ###
 ########################
@@ -177,8 +161,8 @@ for SAMPLE in "${SAMPLES[@]}"; do
 	
 	# run SnpEff to annotate vcf files
 	# allocates more memory and points to the conda/mamba installed .jar file
-	 java -Xmx8g -jar $(dirname $(which snpEff))/../share/snpeff-*/snpEff.jar -verbose -cancer -lof -stats "$ANALYSIS_DIR/SnpEff/snpEff_summary.html" "$SNPEFF_REF" "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.vcf.gz" > "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf"
-
+	java -Xmx8g -jar $(dirname $(which snpEff))/../share/snpeff-*/snpEff.jar -verbose -cancer -lof -stats "$ANALYSIS_DIR/SnpEff/snpEff_summary.html" "$SNPEFF_REF" "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.vcf.gz" > "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf"
+	#snpEff -verbose -cancer -lof -stats "$ANALYSIS_DIR/SnpEff/snpEff_summary.html" "$SNPEFF_REF" "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.vcf.gz" > "$ANALYSIS_DIR/ClairS-TO/$FILE/snv.anno.vcf"
 	# --canon might be interesting to only include canoncial tx
 	# --interval <file> might be interesting to use only regions specified in bed file
 

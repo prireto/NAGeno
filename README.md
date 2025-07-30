@@ -211,6 +211,7 @@ nageno analysis \
   ```
 
   The annotation database should always match the database previously used for annotation and variant calling. You can read more on that issue [here](https://www.biostars.org/p/296349/).
+- `ERROR conda.cli.main_run:execute(33): Subprocess for 'conda run ... failed`: During analysis, either the `nageno` or the `nageno_plot` environment is used to run commands. A common error can occur at this stage due to a known Conda issue where [conda commands are not available in subshells within Bash scripts](https://github.com/conda/conda/issues/7980). Fortunately, the workarounds proposed in that issue resolved the problem in all our test cases.
 
 </details>
 
