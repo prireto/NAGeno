@@ -83,6 +83,7 @@ wget http://www.bio8.cs.hku.hk/clairs-to/cna_data/reference_files.tar.gz
 tar -zxvf clairs-to_models.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_models/
 tar -zxvf clairs-to_databases.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_databases/
 tar -zxvf reference_files.tar.gz -C ${CONDA_PREFIX}/bin/clairs-to_cna_data/
+cd ../NAGeno
 
 ./run_clairs_to --help
 ```
