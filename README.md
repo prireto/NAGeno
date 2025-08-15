@@ -358,3 +358,6 @@ We welcome all forms of input, new ideas, user feedback, or performance improvem
 
 This project is licensed under the [Apache License 2.0](LICENSE).
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
+## Credit
+Original logo concept: @aweich
